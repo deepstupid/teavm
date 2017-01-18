@@ -17,20 +17,36 @@ package org.teavm.model.analysis;
 
 import com.carrotsearch.hppc.IntArrayDeque;
 import com.carrotsearch.hppc.IntDeque;
-import com.carrotsearch.hppc.IntStack;
+import com.carrotsearch.hppc.IntOpenHashSet;
+import com.carrotsearch.hppc.IntSet;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import org.teavm.common.DisjointSet;
 import org.teavm.common.Graph;
 import org.teavm.common.GraphBuilder;
 import org.teavm.model.BasicBlock;
+import org.teavm.model.ClassReader;
+import org.teavm.model.ClassReaderSource;
+import org.teavm.model.FieldReader;
+import org.teavm.model.FieldReference;
 import org.teavm.model.Incoming;
 import org.teavm.model.Instruction;
 import org.teavm.model.MethodReference;
 import org.teavm.model.Phi;
 import org.teavm.model.Program;
+import org.teavm.model.TryCatchBlock;
 import org.teavm.model.Variable;
 import org.teavm.model.instructions.AbstractInstructionVisitor;
 import org.teavm.model.instructions.AssignInstruction;
+import org.teavm.model.instructions.BinaryBranchingInstruction;
+import org.teavm.model.instructions.BranchingInstruction;
 import org.teavm.model.instructions.CastInstruction;
+import org.teavm.model.instructions.ClassConstantInstruction;
+import org.teavm.model.instructions.CloneArrayInstruction;
 import org.teavm.model.instructions.ConstructInstruction;
 import org.teavm.model.instructions.ExitInstruction;
 import org.teavm.model.instructions.GetElementInstruction;
@@ -40,144 +56,197 @@ import org.teavm.model.instructions.IsInstanceInstruction;
 import org.teavm.model.instructions.MonitorEnterInstruction;
 import org.teavm.model.instructions.MonitorExitInstruction;
 import org.teavm.model.instructions.NullCheckInstruction;
+import org.teavm.model.instructions.NullConstantInstruction;
 import org.teavm.model.instructions.PutElementInstruction;
 import org.teavm.model.instructions.PutFieldInstruction;
 import org.teavm.model.instructions.RaiseInstruction;
+import org.teavm.model.instructions.StringConstantInstruction;
+import org.teavm.model.instructions.UnwrapArrayInstruction;
+import org.teavm.model.util.InstructionTransitionExtractor;
+import org.teavm.model.util.LivenessAnalyzer;
+import org.teavm.model.util.UsageExtractor;
 
 public class EscapeAnalysis {
+    private ClassReaderSource classSource;
     private int[] definitionClasses;
-    private Graph referenceGraph;
     private boolean[] escapingVars;
-    private boolean[] locallyConstructedVars;
+    private FieldReference[][] fields;
+
+    public EscapeAnalysis(ClassReaderSource classSource) {
+        this.classSource = classSource;
+    }
 
     public void analyze(Program program, MethodReference methodReference) {
-        buildGraph(program, methodReference.parameterCount() + 1);
-        detectLoops();
-        propagateEscapeInfo(program);
-        referenceGraph = null;
-    }
-
-    public boolean escapes(int var) {
-        return escapingVars[definitionClasses[var]];
-    }
-
-    public boolean isLocallyConstructed(int var) {
-        return locallyConstructedVars[var];
-    }
-
-    private void buildGraph(Program program, int paramCount) {
-        PreparationVisitor visitor = new PreparationVisitor(program.variableCount());
-        for (int i = 0; i < paramCount; ++i) {
+        InstructionEscapeVisitor visitor = new InstructionEscapeVisitor(program.variableCount(), classSource);
+        for (int i = 0; i <= methodReference.parameterCount(); ++i) {
             visitor.escapingVars[i] = true;
         }
 
         for (BasicBlock block : program.getBasicBlocks()) {
-            for (Phi phi : block.getPhis()) {
-                visitor.visit(phi);
-            }
             for (Instruction insn : block) {
                 insn.acceptVisitor(visitor);
             }
-        }
-
-        definitionClasses = visitor.definitionClasses.pack(program.variableCount());
-        referenceGraph = visitor.referenceGraph.build();
-        locallyConstructedVars = visitor.locallyConstructedVars;
-
-        GraphBuilder reducedGraphBuilder = new GraphBuilder(program.variableCount());
-        for (int i = 0; i < program.variableCount(); ++i) {
-            for (int j : referenceGraph.outgoingEdges(i)) {
-                reducedGraphBuilder.addEdge(definitionClasses[i], definitionClasses[j]);
+            if (block.getExceptionVariable() != null) {
+                visitor.escapingVars[block.getExceptionVariable().getIndex()] = true;
             }
         }
-        referenceGraph = reducedGraphBuilder.build();
 
+
+        definitionClasses = visitor.definitionClasses.pack(program.variableCount());
         escapingVars = new boolean[program.variableCount()];
         for (int i = 0; i < program.variableCount(); ++i) {
             if (visitor.escapingVars[i]) {
                 escapingVars[definitionClasses[i]] = true;
             }
         }
+        analyzePhis(program);
+
+        fields = packFields(visitor.fields);
     }
 
-    private void detectLoops() {
-        IntStack stack = new IntStack();
-        for (int i = 0; i < escapingVars.length; ++i) {
-            if (referenceGraph.incomingEdgesCount(0) == 0) {
-                stack.push(definitionClasses[i]);
-            }
-        }
+    public boolean escapes(int var) {
+        return escapingVars[definitionClasses[var]];
+    }
 
-        boolean[] complete = new boolean[referenceGraph.size()];
-        boolean[] visiting = new boolean[referenceGraph.size()];
+    public FieldReference[] getFields(int var) {
+        FieldReference[] varFields = fields[definitionClasses[var]];
+        return varFields != null ? varFields.clone() : null;
+    }
 
-        while (!stack.isEmpty()) {
-            int var = stack.pop();
-            if (complete[var]) {
-                continue;
-            }
-            if (visiting[var]) {
-                visiting[var] = false;
-                complete[var] = true;
-            } else {
-                visiting[var] = true;
-                stack.push(var);
-                for (int successor : referenceGraph.outgoingEdges(var)) {
-                    if (!visiting[successor]) {
-                        stack.push(successor);
-                    } else {
-                        escapingVars[successor] = true;
+    private void analyzePhis(Program program) {
+        LivenessAnalyzer livenessAnalyzer = new LivenessAnalyzer();
+        livenessAnalyzer.analyze(program);
+
+        GraphBuilder graphBuilder = new GraphBuilder(program.variableCount());
+        IntDeque queue = new IntArrayDeque();
+        for (BasicBlock block : program.getBasicBlocks()) {
+            IntSet sharedIncomingVars = new IntOpenHashSet();
+            BitSet usedVars = getUsedVarsInBlock(livenessAnalyzer, block);
+            for (Phi phi : block.getPhis()) {
+                for (Incoming incoming : phi.getIncomings()) {
+                    int var = incoming.getValue().getIndex();
+                    graphBuilder.addEdge(var, phi.getReceiver().getIndex());
+                    if (escapingVars[definitionClasses[var]] || !sharedIncomingVars.add(var) || usedVars.get(var)) {
+                        queue.addLast(var);
                     }
                 }
             }
         }
-    }
+        Graph graph = graphBuilder.build();
 
-    private void propagateEscapeInfo(Program program) {
-        IntDeque queue = new IntArrayDeque();
-        for (int i = 0; i < escapingVars.length; ++i) {
-            if (escapingVars[i]) {
-                queue.addLast(i);
-            }
-        }
-
-        boolean[] visited = new boolean[program.variableCount()];
+        IntSet visited = new IntOpenHashSet();
         while (!queue.isEmpty()) {
             int var = queue.removeFirst();
-            if (visited[var]) {
-                continue;
-            }
-            visited[var] = true;
-            escapingVars[var] = true;
-
-            for (int successor : referenceGraph.outgoingEdges(var)) {
-                if (!visited[successor]) {
+            if (visited.add(var)) {
+                escapingVars[definitionClasses[var]] = true;
+                for (int successor : graph.outgoingEdges(var)) {
                     queue.addLast(successor);
                 }
             }
         }
     }
 
-    private static class PreparationVisitor extends AbstractInstructionVisitor {
-        DisjointSet definitionClasses;
-        GraphBuilder referenceGraph;
-        boolean[] escapingVars;
-        boolean[] locallyConstructedVars;
+    private BitSet getUsedVarsInBlock(LivenessAnalyzer liveness, BasicBlock block) {
+        BitSet usedVars = new BitSet();
+        InstructionTransitionExtractor transitionExtractor = new InstructionTransitionExtractor();
+        block.getLastInstruction().acceptVisitor(transitionExtractor);
+        for (BasicBlock successor : transitionExtractor.getTargets()) {
+            usedVars.or(liveness.liveIn(successor.getIndex()));
+        }
+        for (TryCatchBlock tryCatch : block.getTryCatchBlocks()) {
+            usedVars.or(liveness.liveIn(tryCatch.getHandler().getIndex()));
+        }
 
-        public PreparationVisitor(int variableCount) {
+        UsageExtractor useExtractor = new UsageExtractor();
+        for (Instruction instruction : block) {
+            instruction.acceptVisitor(useExtractor);
+            for (Variable variable : useExtractor.getUsedVariables()) {
+                usedVars.set(variable.getIndex());
+            }
+        }
+        return usedVars;
+    }
+
+    private FieldReference[][] packFields(List<Set<FieldReference>> fields) {
+        List<Set<FieldReference>> joinedFields = new ArrayList<>(Collections.nCopies(fields.size(), null));
+
+        for (int i = 0; i < fields.size(); ++i) {
+            if (fields.get(i) == null) {
+                continue;
+            }
+            int j = definitionClasses[i];
+            Set<FieldReference> fieldSet = joinedFields.get(j);
+            if (fieldSet == null) {
+                fieldSet = new LinkedHashSet<>();
+                joinedFields.set(j, fieldSet);
+            }
+            fieldSet.addAll(fields.get(i));
+        }
+
+        FieldReference[][] packedFields = new FieldReference[fields.size()][];
+        for (int i = 0; i < packedFields.length; ++i) {
+            if (joinedFields.get(i) != null) {
+                packedFields[i] = joinedFields.get(i).toArray(new FieldReference[0]);
+            }
+        }
+        return packedFields;
+    }
+
+    private static class InstructionEscapeVisitor extends AbstractInstructionVisitor {
+        ClassReaderSource classSource;
+        DisjointSet definitionClasses;
+        boolean[] escapingVars;
+        List<Set<FieldReference>> fields;
+
+        public InstructionEscapeVisitor(int variableCount, ClassReaderSource classSource) {
+            this.classSource = classSource;
+            fields = new ArrayList<>(Collections.nCopies(variableCount, null));
             definitionClasses = new DisjointSet();
-            referenceGraph = new GraphBuilder(variableCount);
             for (int i = 0; i < variableCount; ++i) {
                 definitionClasses.create();
             }
             escapingVars = new boolean[variableCount];
-            locallyConstructedVars = new boolean[variableCount];
         }
 
-        public void visit(Phi insn) {
-            for (Incoming incoming : insn.getIncomings()) {
-                definitionClasses.union(insn.getReceiver().getIndex(), incoming.getValue().getIndex());
+        @Override
+        public void visit(ConstructInstruction insn) {
+            ClassReader cls = classSource.get(insn.getType());
+            if (cls == null) {
+                escapingVars[insn.getReceiver().getIndex()] = true;
             }
+
+            while (cls != null) {
+                for (FieldReader field : cls.getFields()) {
+                    addField(insn.getReceiver(), field.getReference());
+                }
+                cls = cls.getParent() != null ? classSource.get(cls.getParent()) : null;
+            }
+        }
+
+        @Override
+        public void visit(NullConstantInstruction insn) {
+            escapingVars[insn.getReceiver().getIndex()] = true;
+        }
+
+        @Override
+        public void visit(ClassConstantInstruction insn) {
+            escapingVars[insn.getReceiver().getIndex()] = true;
+        }
+
+        @Override
+        public void visit(StringConstantInstruction insn) {
+            escapingVars[insn.getReceiver().getIndex()] = true;
+        }
+
+        @Override
+        public void visit(CloneArrayInstruction insn) {
+            escapingVars[insn.getArray().getIndex()] = true;
+            escapingVars[insn.getReceiver().getIndex()] = true;
+        }
+
+        @Override
+        public void visit(UnwrapArrayInstruction insn) {
+            definitionClasses.union(insn.getReceiver().getIndex(), insn.getArray().getIndex());
         }
 
         @Override
@@ -187,7 +256,8 @@ public class EscapeAnalysis {
 
         @Override
         public void visit(CastInstruction insn) {
-            definitionClasses.union(insn.getReceiver().getIndex(), insn.getValue().getIndex());
+            escapingVars[insn.getReceiver().getIndex()] = true;
+            escapingVars[insn.getValue().getIndex()] = true;
         }
 
         @Override
@@ -203,26 +273,27 @@ public class EscapeAnalysis {
         }
 
         @Override
-        public void visit(ConstructInstruction insn) {
-            locallyConstructedVars[insn.getReceiver().getIndex()] = true;
-        }
-
-        @Override
         public void visit(GetFieldInstruction insn) {
-            registerReference(insn.getInstance(), insn.getReceiver());
+            escapingVars[insn.getReceiver().getIndex()] = true;
+            addField(insn.getInstance(), insn.getField());
         }
 
         @Override
         public void visit(PutFieldInstruction insn) {
-            registerReference(insn.getInstance(), insn.getValue());
+            escapingVars[insn.getValue().getIndex()] = true;
+            addField(insn.getInstance(), insn.getField());
         }
 
-        private void registerReference(Variable instance, Variable value) {
-            if (instance != null) {
-                referenceGraph.addEdge(instance.getIndex(), value.getIndex());
-            } else {
-                escapingVars[value.getIndex()] = true;
+        private void addField(Variable instance, FieldReference field) {
+            if (instance == null) {
+                return;
             }
+            Set<FieldReference> fieldSet = fields.get(instance.getIndex());
+            if (fieldSet == null) {
+                fieldSet = new LinkedHashSet<>();
+                fields.set(instance.getIndex(), fieldSet);
+            }
+            fieldSet.add(field);
         }
 
         @Override
@@ -266,6 +337,31 @@ public class EscapeAnalysis {
         @Override
         public void visit(MonitorExitInstruction insn) {
             escapingVars[insn.getObjectRef().getIndex()] = true;
+        }
+
+        @Override
+        public void visit(BranchingInstruction insn) {
+            switch (insn.getCondition()) {
+                case NULL:
+                case NOT_NULL:
+                    escapingVars[insn.getOperand().getIndex()] = true;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        @Override
+        public void visit(BinaryBranchingInstruction insn) {
+            switch (insn.getCondition()) {
+                case REFERENCE_EQUAL:
+                case REFERENCE_NOT_EQUAL:
+                    escapingVars[insn.getFirstOperand().getIndex()] = true;
+                    escapingVars[insn.getSecondOperand().getIndex()] = true;
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
