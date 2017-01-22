@@ -21,8 +21,26 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.teavm.model.*;
-import org.teavm.model.instructions.*;
+import org.teavm.model.BasicBlockReader;
+import org.teavm.model.FieldReference;
+import org.teavm.model.MethodDescriptor;
+import org.teavm.model.MethodHandle;
+import org.teavm.model.MethodReference;
+import org.teavm.model.ProgramReader;
+import org.teavm.model.RuntimeConstant;
+import org.teavm.model.TextLocation;
+import org.teavm.model.ValueType;
+import org.teavm.model.VariableReader;
+import org.teavm.model.instructions.ArrayElementType;
+import org.teavm.model.instructions.BinaryBranchingCondition;
+import org.teavm.model.instructions.BinaryOperation;
+import org.teavm.model.instructions.BranchingCondition;
+import org.teavm.model.instructions.CastIntegerDirection;
+import org.teavm.model.instructions.InstructionReader;
+import org.teavm.model.instructions.IntegerSubtype;
+import org.teavm.model.instructions.InvocationType;
+import org.teavm.model.instructions.NumericOperandType;
+import org.teavm.model.instructions.SwitchTableEntryReader;
 
 class InstructionStringifier implements InstructionReader {
     private TextLocation location;
@@ -460,7 +478,7 @@ class InstructionStringifier implements InstructionReader {
         if (instance != null) {
             appendLocalVar(instance).append(".");
         }
-        append(method.getName()).append("(");
+        append(method.name).append("(");
         append(arguments.stream().map(arg -> "@" + arg.getIndex()).collect(Collectors.joining(", ")));
         append(") ");
         append("[").append(convert(bootstrapMethod)).append('(');

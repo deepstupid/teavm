@@ -38,7 +38,7 @@ public class LambdaMetafactorySubstitutor implements BootstrapMethodSubstitutor 
 
     @Override
     public ValueEmitter substitute(DynamicCallSite callSite, ProgramEmitter callerPe) {
-        ValueType[] invokedType = callSite.getCalledMethod().getSignature();
+        ValueType[] invokedType = callSite.getCalledMethod().signature;
         ValueType[] samMethodType = callSite.getBootstrapArguments().get(0).getMethodType();
         MethodHandle implMethod = callSite.getBootstrapArguments().get(1).getMethodHandle();
         ValueType[] instantiatedMethodType = callSite.getBootstrapArguments().get(2).getMethodType();
@@ -60,10 +60,10 @@ public class LambdaMetafactorySubstitutor implements BootstrapMethodSubstitutor 
         MethodHolder ctor = createConstructor(classSource, implementor,
                 Arrays.copyOfRange(invokedType, 0, capturedVarCount));
         ctor.getAnnotations().add(new AnnotationHolder(NoCache.class.getName()));
-        createBridge(classSource, implementor, callSite.getCalledMethod().getName(), instantiatedMethodType,
+        createBridge(classSource, implementor, callSite.getCalledMethod().name, instantiatedMethodType,
                 samMethodType);
 
-        MethodHolder worker = new MethodHolder(callSite.getCalledMethod().getName(), instantiatedMethodType);
+        MethodHolder worker = new MethodHolder(callSite.getCalledMethod().name, instantiatedMethodType);
         worker.getAnnotations().add(new AnnotationHolder(NoCache.class.getName()));
         worker.setLevel(AccessLevel.PUBLIC);
         ProgramEmitter pe = ProgramEmitter.create(worker, callSite.getAgent().getClassSource());

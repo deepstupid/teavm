@@ -29,8 +29,8 @@ import org.teavm.metaprogramming.CompileTime;
 
 public class MetaprogrammingClassLoader extends ClassLoader {
     private MetaprogrammingInstrumentation instrumentation = new MetaprogrammingInstrumentation();
-    private Map<String, Boolean> compileTimeClasses = new HashMap<>();
-    private Map<String, Boolean> compileTimePackages = new HashMap<>();
+    private final Map<String, Boolean> compileTimeClasses = new HashMap<>();
+    private final Map<String, Boolean> compileTimePackages = new HashMap<>();
 
     public MetaprogrammingClassLoader(ClassLoader parent) {
         super(parent);
@@ -51,7 +51,7 @@ public class MetaprogrammingClassLoader extends ClassLoader {
     }
 
     public boolean isCompileTimeClass(String name) {
-        return compileTimeClasses.computeIfAbsent(name, n -> checkIfCompileTime(n));
+        return compileTimeClasses.computeIfAbsent(name, this::checkIfCompileTime);
     }
 
     private boolean checkIfCompileTime(String name) {
@@ -121,7 +121,7 @@ public class MetaprogrammingClassLoader extends ClassLoader {
         boolean compileTime;
 
         CompileTimeClassVisitor() {
-            super(Opcodes.ASM5, null);
+            super(Opcodes.ASM6, null);
         }
 
         @Override

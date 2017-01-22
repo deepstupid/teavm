@@ -337,28 +337,37 @@ public class GCShadowStackContributor {
     private void putLiveInGCRoots(Program program, List<Map<Instruction, int[]>> updateInformation) {
         for (int i = 0; i < program.basicBlockCount(); ++i) {
             BasicBlock block = program.basicBlockAt(i);
-            Map<Instruction, int[]> updatesByIndex = updateInformation.get(i);
-            Instruction[] callSiteLocations = updatesByIndex.keySet().toArray(new Instruction[0]);
-            ObjectIntMap<Instruction> instructionIndexes = getInstructionIndexes(block);
-            Arrays.sort(callSiteLocations, Comparator.comparing(instructionIndexes::get));
+            //Map<Instruction, int[]> updatesByIndex = updateInformation.get(i);
+
+
+            int ii = 0;
+            for (Instruction callSiteLocation : block) {
+                storeLiveIns(block, callSiteLocation, new int[] { ii++ });
+                //indexes.put(instruction, indexes.size());
+            }
+            //return indexes;
+
+//            Instruction[] callSiteLocations = updatesByIndex.keySet().toArray(new Instruction[0]);
+//            ObjectIntMap<Instruction> instructionIndexes = getInstructionIndexes(block);
+//            Arrays.sort(callSiteLocations, Comparator.comparing(instructionIndexes::get));
 
 //            updatesByIndex.forEach((callSiteLocation, updates) -> {
 //
 //            });
-            for (Instruction callSiteLocation : callSiteLocations) { //updatesByIndex.keySet()) {
-                int[] updates = updatesByIndex.get(callSiteLocation);
-                storeLiveIns(block, callSiteLocation, updates);
-            }
+//            for (Instruction callSiteLocation : callSiteLocations) { //updatesByIndex.keySet()) {
+//                int[] updates = updatesByIndex.get(callSiteLocation);
+//                storeLiveIns(block, callSiteLocation, updates);
+//            }
         }
     }
 
-    private ObjectIntMap<Instruction> getInstructionIndexes(BasicBlock block) {
-        ObjectIntMap<Instruction> indexes = new ObjectIntHashMap<>();
-        for (Instruction instruction : block) {
-            indexes.put(instruction, indexes.size());
-        }
-        return indexes;
-    }
+//    private ObjectIntMap<Instruction> getInstructionIndexes(BasicBlock block) {
+//        ObjectIntMap<Instruction> indexes = new ObjectIntHashMap<>();
+//        for (Instruction instruction : block) {
+//            indexes.put(instruction, indexes.size());
+//        }
+//        return indexes;
+//    }
 
     private void storeLiveIns(BasicBlock block, Instruction callInstruction, int[] updates) {
         Program program = block.getProgram();

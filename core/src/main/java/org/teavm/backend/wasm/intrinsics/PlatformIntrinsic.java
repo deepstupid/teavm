@@ -31,7 +31,7 @@ public class PlatformIntrinsic implements WasmIntrinsic {
     }
 
     private boolean isApplicableToMethod(MethodDescriptor methodDescriptor) {
-        switch (methodDescriptor.getName()) {
+        switch (methodDescriptor.name) {
             case "getPlatformObject":
             case "asJavaClass":
             case "getName":

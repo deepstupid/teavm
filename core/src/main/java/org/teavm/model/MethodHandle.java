@@ -106,7 +106,7 @@ public class MethodHandle implements Serializable {
     }
 
     public static MethodHandle virtualCaller(String className, MethodDescriptor desc) {
-        return virtualCaller(className, desc.getName(), desc.getSignature());
+        return virtualCaller(className, desc.name, desc.signature);
     }
 
     public static MethodHandle virtualCaller(MethodReference method) {
@@ -120,7 +120,7 @@ public class MethodHandle implements Serializable {
     }
 
     public static MethodHandle staticCaller(String className, MethodDescriptor desc) {
-        return staticCaller(className, desc.getName(), desc.getSignature());
+        return staticCaller(className, desc.name, desc.signature);
     }
 
     public static MethodHandle staticCaller(MethodReference method) {
@@ -134,7 +134,7 @@ public class MethodHandle implements Serializable {
     }
 
     public static MethodHandle specialCaller(String className, MethodDescriptor desc) {
-        return specialCaller(className, desc.getName(), desc.getSignature());
+        return specialCaller(className, desc.name, desc.signature);
     }
 
     public static MethodHandle specialCaller(MethodReference method) {
@@ -148,7 +148,7 @@ public class MethodHandle implements Serializable {
     }
 
     public static MethodHandle constructorCaller(String className, MethodDescriptor desc) {
-        return constructorCaller(className, desc.getName(), desc.getSignature());
+        return constructorCaller(className, desc.name, desc.signature);
     }
 
     public static MethodHandle constructorCaller(MethodReference method) {
@@ -162,7 +162,7 @@ public class MethodHandle implements Serializable {
     }
 
     public static MethodHandle interfaceCaller(String className, MethodDescriptor desc) {
-        return interfaceCaller(className, desc.getName(), desc.getSignature());
+        return interfaceCaller(className, desc.name, desc.signature);
     }
 
     public static MethodHandle interfaceCaller(MethodReference method) {

@@ -16,7 +16,11 @@
 package org.teavm.diagnostics;
 
 import java.util.Arrays;
-import org.teavm.model.*;
+import org.teavm.model.CallLocation;
+import org.teavm.model.FieldReference;
+import org.teavm.model.MethodReference;
+import org.teavm.model.TextLocation;
+import org.teavm.model.ValueType;
 
 /**
  *

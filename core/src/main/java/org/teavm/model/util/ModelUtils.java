@@ -17,7 +17,17 @@ package org.teavm.model.util;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.teavm.model.*;
+import org.teavm.model.AnnotationContainer;
+import org.teavm.model.AnnotationContainerReader;
+import org.teavm.model.AnnotationHolder;
+import org.teavm.model.AnnotationReader;
+import org.teavm.model.AnnotationValue;
+import org.teavm.model.ClassHolder;
+import org.teavm.model.ClassReader;
+import org.teavm.model.FieldHolder;
+import org.teavm.model.FieldReader;
+import org.teavm.model.MethodHolder;
+import org.teavm.model.MethodReader;
 
 public final class ModelUtils {
     private ModelUtils() {

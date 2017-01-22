@@ -17,8 +17,18 @@ package org.teavm.model.util;
 
 import java.util.function.Function;
 import java.util.function.IntUnaryOperator;
-import org.teavm.model.*;
-import org.teavm.model.instructions.*;
+import org.teavm.model.BasicBlock;
+import org.teavm.model.Incoming;
+import org.teavm.model.Instruction;
+import org.teavm.model.Phi;
+import org.teavm.model.Program;
+import org.teavm.model.TryCatchBlock;
+import org.teavm.model.instructions.AbstractInstructionVisitor;
+import org.teavm.model.instructions.BinaryBranchingInstruction;
+import org.teavm.model.instructions.BranchingInstruction;
+import org.teavm.model.instructions.JumpInstruction;
+import org.teavm.model.instructions.SwitchInstruction;
+import org.teavm.model.instructions.SwitchTableEntry;
 
 public class BasicBlockMapper extends AbstractInstructionVisitor {
     private Function<BasicBlock, BasicBlock> mapFunction;

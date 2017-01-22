@@ -24,7 +24,7 @@ final class TestEntryPoint {
     }
 
     public static void run() throws Throwable {
-        createRunner().run(() -> launchTest());
+        createRunner().run(TestEntryPoint::launchTest);
     }
 
     private static native TestRunner createRunner();

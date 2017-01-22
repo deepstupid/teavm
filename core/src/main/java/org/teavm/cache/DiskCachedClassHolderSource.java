@@ -15,9 +15,39 @@
  */
 package org.teavm.cache;
 
-import java.io.*;
-import java.util.*;
-import org.teavm.model.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.DataInput;
+import java.io.DataInputStream;
+import java.io.DataOutput;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import org.teavm.model.AccessLevel;
+import org.teavm.model.AnnotationContainer;
+import org.teavm.model.AnnotationHolder;
+import org.teavm.model.AnnotationReader;
+import org.teavm.model.AnnotationValue;
+import org.teavm.model.ClassHolder;
+import org.teavm.model.ClassHolderSource;
+import org.teavm.model.ElementModifier;
+import org.teavm.model.FieldHolder;
+import org.teavm.model.FieldReference;
+import org.teavm.model.MethodDescriptor;
+import org.teavm.model.MethodHolder;
+import org.teavm.model.ValueType;
 import org.teavm.parsing.ClassDateProvider;
 
 public class DiskCachedClassHolderSource implements ClassHolderSource {

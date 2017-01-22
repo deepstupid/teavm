@@ -55,7 +55,7 @@ public class DefaultAliasProvider implements AliasProvider {
 
     @Override
     public String getMethodAlias(MethodDescriptor method) {
-        String alias = method.getName();
+        String alias = method.name;
         switch (alias) {
             case "<init>":
                 alias = "$_init_";
@@ -72,7 +72,7 @@ public class DefaultAliasProvider implements AliasProvider {
 
     @Override
     public String getStaticMethodAlias(MethodReference method) {
-        String alias = method.getDescriptor().getName();
+        String alias = method.getDescriptor().name;
         switch (alias) {
             case "<init>":
                 alias = "_init_";

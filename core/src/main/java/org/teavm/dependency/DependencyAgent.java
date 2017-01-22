@@ -19,7 +19,12 @@ import java.util.Collection;
 import org.teavm.callgraph.CallGraph;
 import org.teavm.common.ServiceRepository;
 import org.teavm.diagnostics.Diagnostics;
-import org.teavm.model.*;
+import org.teavm.model.CallLocation;
+import org.teavm.model.ClassHolder;
+import org.teavm.model.ClassReaderSource;
+import org.teavm.model.FieldReference;
+import org.teavm.model.MethodReference;
+import org.teavm.model.Program;
 
 public class DependencyAgent implements DependencyInfo, ServiceRepository {
     private DependencyChecker checker;

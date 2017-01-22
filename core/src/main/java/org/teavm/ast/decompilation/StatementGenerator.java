@@ -16,7 +16,6 @@
 package org.teavm.ast.decompilation;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -572,8 +571,8 @@ class StatementGenerator implements InstructionVisitor {
         Statement consequent = generateJumpStatement(consequentBlock);
         Statement alternative = generateJumpStatement(alternativeBlock);
         statements.add(Statement.cond(condition,
-                consequent != null ? Arrays.asList(consequent) : Collections.emptyList(),
-                alternative != null ? Arrays.asList(alternative) : Collections.emptyList()));
+                consequent != null ? Collections.singletonList(consequent) : Collections.emptyList(),
+                alternative != null ? Collections.singletonList(alternative) : Collections.emptyList()));
     }
 
     private Expr compare(BinaryOperation op, OperationType type, Variable value) {

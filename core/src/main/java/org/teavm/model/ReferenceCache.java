@@ -48,7 +48,7 @@ public class ReferenceCache implements Serializable {
         MethodDescriptor result = descriptorCache.get(descriptor);
         if (result == null) {
             result = descriptor;
-            ValueType[] signature = descriptor.getSignature();
+            ValueType[] signature = descriptor.signature;
             boolean signatureChanged = false;
             for (int i = 0; i < signature.length; ++i) {
                 ValueType type = signature[i];
@@ -62,7 +62,7 @@ public class ReferenceCache implements Serializable {
                 }
             }
             if (signatureChanged) {
-                result = new MethodDescriptor(descriptor.getName(), signature);
+                result = new MethodDescriptor(descriptor.name, signature);
             }
             descriptorCache.put(result, result);
         }

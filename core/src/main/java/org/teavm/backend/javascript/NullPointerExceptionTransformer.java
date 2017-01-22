@@ -16,7 +16,14 @@
 package org.teavm.backend.javascript;
 
 import org.teavm.diagnostics.Diagnostics;
-import org.teavm.model.*;
+import org.teavm.model.BasicBlock;
+import org.teavm.model.ClassHolder;
+import org.teavm.model.ClassHolderTransformer;
+import org.teavm.model.ClassReaderSource;
+import org.teavm.model.Instruction;
+import org.teavm.model.MethodHolder;
+import org.teavm.model.Program;
+import org.teavm.model.Variable;
 import org.teavm.model.instructions.InvocationType;
 import org.teavm.model.instructions.InvokeInstruction;
 import org.teavm.model.instructions.NullCheckInstruction;

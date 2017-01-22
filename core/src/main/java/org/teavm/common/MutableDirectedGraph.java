@@ -102,6 +102,10 @@ public class MutableDirectedGraph implements Graph {
         return successors.get(node).toArray();
     }
 
+//    public IntSet outgoingEdgesList(int node) {
+//        return successors.get(node);
+//    }
+
     @Override
     public int copyOutgoingEdges(int node, int[] target) {
         int index = 0;

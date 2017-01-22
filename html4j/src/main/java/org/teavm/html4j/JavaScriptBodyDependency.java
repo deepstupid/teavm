@@ -137,7 +137,7 @@ public class JavaScriptBodyDependency extends AbstractDependencyListener {
                 return null;
             }
             for (MethodReader method : cls.getMethods()) {
-                if (method.getName().equals(desc.getName()) && sameParams(method.getDescriptor(), desc)) {
+                if (method.getName().equals(desc.name) && sameParams(method.getDescriptor(), desc)) {
                     return method;
                 }
             }

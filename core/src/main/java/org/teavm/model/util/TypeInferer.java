@@ -19,8 +19,25 @@ import java.util.List;
 import org.teavm.common.Graph;
 import org.teavm.common.GraphBuilder;
 import org.teavm.common.IntegerStack;
-import org.teavm.model.*;
-import org.teavm.model.instructions.*;
+import org.teavm.model.BasicBlockReader;
+import org.teavm.model.FieldReference;
+import org.teavm.model.IncomingReader;
+import org.teavm.model.MethodDescriptor;
+import org.teavm.model.MethodHandle;
+import org.teavm.model.MethodReference;
+import org.teavm.model.PhiReader;
+import org.teavm.model.ProgramReader;
+import org.teavm.model.RuntimeConstant;
+import org.teavm.model.ValueType;
+import org.teavm.model.VariableReader;
+import org.teavm.model.instructions.AbstractInstructionReader;
+import org.teavm.model.instructions.ArrayElementType;
+import org.teavm.model.instructions.BinaryOperation;
+import org.teavm.model.instructions.CastIntegerDirection;
+import org.teavm.model.instructions.InstructionReader;
+import org.teavm.model.instructions.IntegerSubtype;
+import org.teavm.model.instructions.InvocationType;
+import org.teavm.model.instructions.NumericOperandType;
 
 public class TypeInferer {
     VariableType[] types;

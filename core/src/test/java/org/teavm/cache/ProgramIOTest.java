@@ -30,7 +30,17 @@ import org.teavm.model.BasicBlock;
 import org.teavm.model.Instruction;
 import org.teavm.model.Program;
 import org.teavm.model.ValueType;
-import org.teavm.model.instructions.*;
+import org.teavm.model.instructions.BinaryInstruction;
+import org.teavm.model.instructions.BinaryOperation;
+import org.teavm.model.instructions.ClassConstantInstruction;
+import org.teavm.model.instructions.DoubleConstantInstruction;
+import org.teavm.model.instructions.EmptyInstruction;
+import org.teavm.model.instructions.FloatConstantInstruction;
+import org.teavm.model.instructions.IntegerConstantInstruction;
+import org.teavm.model.instructions.LongConstantInstruction;
+import org.teavm.model.instructions.NullConstantInstruction;
+import org.teavm.model.instructions.NumericOperandType;
+import org.teavm.model.instructions.StringConstantInstruction;
 
 public class ProgramIOTest {
     @Test

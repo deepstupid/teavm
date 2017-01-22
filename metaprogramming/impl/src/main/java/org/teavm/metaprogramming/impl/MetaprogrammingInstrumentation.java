@@ -32,9 +32,9 @@ import org.teavm.metaprogramming.Metaprogramming;
 import org.teavm.model.MethodReference;
 
 public class MetaprogrammingInstrumentation {
-    private static String lambdaMetafactory = LambdaMetafactory.class.getName().replace('.', '/');
-    private static String proxyHelperType = Type.getInternalName(RuntimeHelper.class);
-    private static String listDesc = Type.getDescriptor(List.class);
+    private static final String lambdaMetafactory = LambdaMetafactory.class.getName().replace('.', '/');
+    private static final String proxyHelperType = Type.getInternalName(RuntimeHelper.class);
+    private static final String listDesc = Type.getDescriptor(List.class);
 
     public byte[] instrument(byte[] bytecode) {
         ClassReader reader = new ClassReader(bytecode);
@@ -46,7 +46,7 @@ public class MetaprogrammingInstrumentation {
 
     class ClassTransformer extends ClassVisitor {
         ClassTransformer(ClassVisitor cv) {
-            super(Opcodes.ASM5, cv);
+            super(Opcodes.ASM6, cv);
         }
 
         @Override
@@ -60,7 +60,7 @@ public class MetaprogrammingInstrumentation {
         private boolean instrumented;
 
         MethodTransformer(MethodVisitor mv) {
-            super(Opcodes.ASM5, mv);
+            super(Opcodes.ASM6, mv);
         }
 
         @Override

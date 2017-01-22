@@ -18,7 +18,10 @@ package org.teavm.ast;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import org.teavm.model.*;
+import org.teavm.model.FieldReference;
+import org.teavm.model.MethodReference;
+import org.teavm.model.TextLocation;
+import org.teavm.model.ValueType;
 
 public abstract class Expr implements Cloneable {
     private TextLocation location;

@@ -27,3 +27,6 @@ target
 .idea/vcs.xml
 .idea/libraries/*
 .idea/artifacts/*
+.idea/*
+.idea/
+.idea

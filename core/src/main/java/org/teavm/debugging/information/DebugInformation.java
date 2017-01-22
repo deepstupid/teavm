@@ -15,8 +15,22 @@
  */
 package org.teavm.debugging.information;
 
-import java.io.*;
-import java.util.*;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Writer;
+import java.util.AbstractList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.RandomAccess;
+import java.util.Set;
 import org.teavm.common.IntegerArray;
 import org.teavm.common.RecordArray;
 import org.teavm.common.RecordArrayBuilder;

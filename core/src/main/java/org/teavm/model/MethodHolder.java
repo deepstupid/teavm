@@ -27,7 +27,7 @@ public class MethodHolder extends MemberHolder implements MethodReader {
     private AnnotationContainer[] parameterAnnotations;
 
     public MethodHolder(MethodDescriptor descriptor) {
-        super(descriptor.getName());
+        super(descriptor.name);
         this.descriptor = descriptor;
         parameterAnnotations = new AnnotationContainer[descriptor.parameterCount()];
         for (int i = 0; i < parameterAnnotations.length; ++i) {
@@ -51,7 +51,7 @@ public class MethodHolder extends MemberHolder implements MethodReader {
 
     @Override
     public ValueType[] getSignature() {
-        return descriptor.getSignature();
+        return descriptor.signature;
     }
 
     @Override

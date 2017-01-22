@@ -16,7 +16,6 @@
 package org.teavm.model.classes;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -82,7 +81,7 @@ public class TagRegistry {
             } else {
                 Range simpleRange = simpleRanges.get(className);
                 if (simpleRange != null) {
-                    ranges.put(className, new ArrayList<>(Arrays.asList(simpleRange)));
+                    ranges.put(className, new ArrayList<>(Collections.singletonList(simpleRange)));
                 }
             }
         }

@@ -64,7 +64,7 @@ class ResourceProgramTransformer {
             accessInsn.setType(InvocationType.SPECIAL);
             ValueType[] types = new ValueType[method.getDescriptor().parameterCount() + 2];
             types[0] = ValueType.object("java.lang.Object");
-            System.arraycopy(method.getDescriptor().getSignature(), 0, types, 1,
+            System.arraycopy(method.getDescriptor().signature, 0, types, 1,
                     method.getDescriptor().parameterCount() + 1);
             accessInsn.setMethod(new MethodReference(ResourceAccessor.class.getName(), method.getName(), types));
             accessInsn.getArguments().add(insn.getInstance());

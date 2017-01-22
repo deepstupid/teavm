@@ -37,7 +37,7 @@ public abstract class ValueType implements Serializable {
     }
 
     public static class Object extends ValueType {
-        private String className;
+        private final String className;
 
         public Object(String className) {
             this.className = className;
@@ -62,7 +62,7 @@ public abstract class ValueType implements Serializable {
     }
 
     public static class Primitive extends ValueType {
-        private PrimitiveType kind;
+        private final PrimitiveType kind;
 
         Primitive(PrimitiveType kind) {
             this.kind = kind;
@@ -110,7 +110,7 @@ public abstract class ValueType implements Serializable {
     }
 
     public static class Array extends ValueType {
-        private ValueType itemType;
+        private final ValueType itemType;
 
         public Array(ValueType itemType) {
             this.itemType = itemType;
@@ -228,7 +228,8 @@ public abstract class ValueType implements Serializable {
     public static ValueType[] parseManyIfPossible(String text) {
         List<ValueType> types = new ArrayList<>();
         int index = 0;
-        while (index < text.length()) {
+        int textLen = text.length();
+        while (index < textLen) {
             int nextIndex = cut(text, index);
             ValueType type = parse(text.substring(index, nextIndex));
             if (type == null) {
@@ -240,9 +241,10 @@ public abstract class ValueType implements Serializable {
         return types.toArray(new ValueType[types.size()]);
     }
 
-    private static int cut(String text, int index) {
+    private static int cut(final String text, int index) {
+        int textLen = text.length();
         while (text.charAt(index) == '[') {
-            if (++index >= text.length()) {
+            if (++index >= textLen) {
                 return index;
             }
         }
@@ -250,7 +252,7 @@ public abstract class ValueType implements Serializable {
             return index + 1;
         }
         while (text.charAt(index) != ';') {
-            if (++index >= text.length()) {
+            if (++index >= textLen) {
                 return index;
             }
         }

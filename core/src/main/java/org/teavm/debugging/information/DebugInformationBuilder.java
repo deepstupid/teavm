@@ -15,7 +15,12 @@
  */
 package org.teavm.debugging.information;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import org.teavm.backend.javascript.codegen.LocationProvider;
 import org.teavm.common.RecordArray;
 import org.teavm.common.RecordArrayBuilder;

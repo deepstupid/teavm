@@ -28,7 +28,7 @@ public class ClassIntrinsic implements WasmIntrinsic {
     }
 
     private boolean isApplicableToMethod(MethodDescriptor method) {
-        return method.getName().equals("getClass") && method.parameterCount() == 1;
+        return method.name.equals("getClass") && method.parameterCount() == 1;
     }
 
     @Override

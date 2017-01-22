@@ -17,7 +17,13 @@ package org.teavm.backend.javascript.codegen;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.teavm.model.*;
+import org.teavm.model.AccessLevel;
+import org.teavm.model.ClassReader;
+import org.teavm.model.ClassReaderSource;
+import org.teavm.model.FieldReference;
+import org.teavm.model.MethodDescriptor;
+import org.teavm.model.MethodReader;
+import org.teavm.model.MethodReference;
 
 public class DefaultNamingStrategy implements NamingStrategy {
     private final AliasProvider aliasProvider;

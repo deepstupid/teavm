@@ -217,7 +217,7 @@ public final class TeaVMPluginLoader {
         PluginDescriptor descriptor;
 
         public PluginDescriptorFiller(PluginDescriptor descriptor) {
-            super(Opcodes.ASM5);
+            super(Opcodes.ASM6);
             this.descriptor = descriptor;
         }
 
@@ -234,12 +234,12 @@ public final class TeaVMPluginLoader {
         }
 
         private AnnotationVisitor readClassArray(Consumer<String[]> resultConsumer) {
-            return new AnnotationVisitor(Opcodes.ASM5) {
+            return new AnnotationVisitor(Opcodes.ASM6) {
                 @Override
                 public AnnotationVisitor visitArray(String name) {
                     List<String> values = new ArrayList<>();
                     if (name.equals("value")) {
-                        return new AnnotationVisitor(Opcodes.ASM5) {
+                        return new AnnotationVisitor(Opcodes.ASM6) {
                             @Override
                             public void visit(String name, Object value) {
                                 values.add(((Type) value).getClassName());

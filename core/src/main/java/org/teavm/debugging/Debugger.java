@@ -15,13 +15,30 @@
  */
 package org.teavm.debugging;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.LinkedBlockingQueue;
-import org.teavm.debugging.information.*;
-import org.teavm.debugging.javascript.*;
+import org.teavm.debugging.information.DebugInformation;
+import org.teavm.debugging.information.DebugInformationProvider;
+import org.teavm.debugging.information.DebuggerCallSite;
+import org.teavm.debugging.information.DebuggerCallSiteVisitor;
+import org.teavm.debugging.information.DebuggerStaticCallSite;
+import org.teavm.debugging.information.DebuggerVirtualCallSite;
+import org.teavm.debugging.information.GeneratedLocation;
+import org.teavm.debugging.information.SourceLocation;
+import org.teavm.debugging.javascript.JavaScriptBreakpoint;
+import org.teavm.debugging.javascript.JavaScriptCallFrame;
+import org.teavm.debugging.javascript.JavaScriptDebugger;
+import org.teavm.debugging.javascript.JavaScriptDebuggerListener;
+import org.teavm.debugging.javascript.JavaScriptLocation;
 import org.teavm.model.MethodReference;
 
 /**

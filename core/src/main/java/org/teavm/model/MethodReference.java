@@ -92,11 +92,11 @@ public class MethodReference implements Serializable {
     }
 
     public int parameterCount() {
-        return descriptor.getSignature().length - 1;
+        return descriptor.signature.length - 1;
     }
 
     public ValueType parameterType(int index) {
-        ValueType[] signature = descriptor.getSignature();
+        ValueType[] signature = descriptor.signature;
         if (index >= signature.length + 1) {
             throw new IndexOutOfBoundsException("Index " + index + " is greater than size " + (signature.length - 1));
         }
@@ -104,22 +104,22 @@ public class MethodReference implements Serializable {
     }
 
     public ValueType[] getParameterTypes() {
-        ValueType[] signature = descriptor.getSignature();
+        ValueType[] signature = descriptor.signature;
         return Arrays.copyOf(signature, signature.length - 1);
     }
 
     public ValueType[] getSignature() {
-        return descriptor.getSignature();
+        return descriptor.signature;
         //return Arrays.copyOf(signature, signature.length);
     }
 
     public ValueType getReturnType() {
-        ValueType[] signature = descriptor.getSignature();
+        ValueType[] signature = descriptor.signature;
         return signature[signature.length - 1];
     }
 
     public String getName() {
-        return descriptor.getName();
+        return descriptor.name;
     }
 
     @Override
@@ -143,7 +143,7 @@ public class MethodReference implements Serializable {
     @JsonValue
     public String toString() {
         if (reprCache == null) {
-            reprCache = className + "." + getName() + signatureToString();
+            reprCache = className + '.' + getName() + signatureToString();
         }
         return reprCache;
     }
@@ -170,7 +170,7 @@ public class MethodReference implements Serializable {
     public String signatureToString() {
         StringBuilder sb = new StringBuilder();
         sb.append('(');
-        ValueType[] signature = descriptor.getSignature();
+        ValueType[] signature = descriptor.signature;
         for (int i = 0; i < signature.length - 1; ++i) {
             sb.append(signature[i].toString());
         }

@@ -15,7 +15,10 @@
  */
 package org.teavm.dependency;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.BitSet;
+import java.util.List;
 import org.teavm.model.MethodReference;
 
 public class DependencyNode implements ValueDependencyInfo {

@@ -15,7 +15,9 @@
  */
 package org.teavm.model.instructions;
 
-import org.teavm.model.*;
+import org.teavm.model.Instruction;
+import org.teavm.model.ValueType;
+import org.teavm.model.Variable;
 
 /**
  *

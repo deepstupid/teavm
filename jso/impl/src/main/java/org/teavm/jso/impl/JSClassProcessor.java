@@ -1148,11 +1148,11 @@ class JSClassProcessor {
             return false;
         }
         if (desc.getResultType().equals(ValueType.BOOLEAN)) {
-            if (isProperPrefix(desc.getName(), "is")) {
+            if (isProperPrefix(desc.name, "is")) {
                 return true;
             }
         }
-        return isProperPrefix(desc.getName(), "get");
+        return isProperPrefix(desc.name, "get");
     }
 
     private boolean isProperSetter(MethodDescriptor desc) {
@@ -1160,7 +1160,7 @@ class JSClassProcessor {
                 || desc.getResultType() != ValueType.VOID) {
             return false;
         }
-        return isProperPrefix(desc.getName(), "set");
+        return isProperPrefix(desc.name, "set");
     }
 
     private boolean isProperPrefix(String name, String prefix) {

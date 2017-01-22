@@ -28,7 +28,15 @@ public class MethodDescriptor implements Serializable {
             throw new IllegalArgumentException("Signature must be at least 1 element length");
         }
         this.name = name;
-        this.signature = Arrays.copyOf(signature, signature.length);
+        this.signature = signature; //Arrays.copyOf(signature, signature.length);
+    }
+
+    public final String getName() {
+        return name;
+    }
+
+    public ValueType[] getSignature() {
+        return signature;
     }
 
     public MethodDescriptor(String name, Class<?>... signature) {
@@ -40,15 +48,6 @@ public class MethodDescriptor implements Serializable {
         for (int i = 0; i < signature.length; ++i) {
             this.signature[i] = ValueType.parse(signature[i]);
         }
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public ValueType[] getSignature() {
-        return signature;
-        //return Arrays.copyOf(signature, signature.length);
     }
 
     public ValueType[] getParameterTypes() {

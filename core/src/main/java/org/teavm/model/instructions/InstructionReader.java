@@ -16,7 +16,15 @@
 package org.teavm.model.instructions;
 
 import java.util.List;
-import org.teavm.model.*;
+import org.teavm.model.BasicBlockReader;
+import org.teavm.model.FieldReference;
+import org.teavm.model.MethodDescriptor;
+import org.teavm.model.MethodHandle;
+import org.teavm.model.MethodReference;
+import org.teavm.model.RuntimeConstant;
+import org.teavm.model.TextLocation;
+import org.teavm.model.ValueType;
+import org.teavm.model.VariableReader;
 
 public interface InstructionReader {
     void location(TextLocation location);

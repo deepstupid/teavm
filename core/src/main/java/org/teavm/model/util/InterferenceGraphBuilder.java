@@ -15,9 +15,19 @@
  */
 package org.teavm.model.util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import org.teavm.common.MutableGraphNode;
-import org.teavm.model.*;
+import org.teavm.model.BasicBlock;
+import org.teavm.model.Incoming;
+import org.teavm.model.Instruction;
+import org.teavm.model.Phi;
+import org.teavm.model.Program;
+import org.teavm.model.TryCatchBlock;
+import org.teavm.model.Variable;
 
 class InterferenceGraphBuilder {
     public List<MutableGraphNode> build(Program program, int paramCount, LivenessAnalyzer liveness) {
