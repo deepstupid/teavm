@@ -33,6 +33,11 @@ import org.teavm.parsing.ClasspathClassHolderSource;
 public class JCLComparisonBuilder {
     private static final String JAR_PREFIX = "jar:file:";
     private static final String JAR_SUFFIX = "!/java/lang/Object.class";
+
+//    //JDK9
+//    private static final String JAR_PREFIX = "jrt:/java.base";
+//    private static final String JAR_SUFFIX = "/java/lang/Object.class";
+
     private static final String CLASS_SUFFIX = ".class";
     private static final String TEMPLATE_PLACEHOLDER = "${CONTENT}";
     private Set<String> packages = new HashSet<>();
@@ -121,15 +126,17 @@ public class JCLComparisonBuilder {
         URL url = classLoader.getResource("java/lang/Object" + CLASS_SUFFIX);
         String path = url.toString();
         if (!path.startsWith(JAR_PREFIX) || !path.endsWith(JAR_SUFFIX)) {
-            throw new RuntimeException("Can't find JCL classes");
+            throw new RuntimeException("Can't find JCL classes: " + path);
         }
         ClasspathClassHolderSource classSource = new ClasspathClassHolderSource(classLoader);
+        System.out.println("Loading JAR: " + path);
         path = path.substring(JAR_PREFIX.length(), path.length() - JAR_SUFFIX.length());
         File outDir = new File(outputDirectory).getParentFile();
         if (!outDir.exists()) {
             outDir.mkdirs();
         }
         path = URLDecoder.decode(path, "UTF-8");
+        System.out.println("Loading JAR: " + path);
         try (JarInputStream jar = new JarInputStream(new FileInputStream(path))) {
             visitor = new JCLComparisonVisitor(classSource, packageMap);
             while (true) {

@@ -70,9 +70,9 @@ public class Linker {
                     }
 
                     FieldReference fieldRef = getField.getField();
-                    if (!fieldRef.getClassName().equals(method.getOwnerName())) {
+                    if (!fieldRef.className.equals(method.getOwnerName())) {
                         InitClassInstruction initInsn = new InitClassInstruction();
-                        initInsn.setClassName(fieldRef.getClassName());
+                        initInsn.setClassName(fieldRef.className);
                         initInsn.setLocation(insn.getLocation());
                         insn.insertPrevious(initInsn);
                     }

@@ -43,4 +43,9 @@ public abstract class MethodNode {
     public abstract boolean isAsync();
 
     public abstract List<VariableNode> getVariables();
+
+    @Override
+    public String toString() {
+        return "MethodNode{" + reference + ":" + modifiers + "}";
+    }
 }

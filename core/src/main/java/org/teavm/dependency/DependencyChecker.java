@@ -416,7 +416,7 @@ public class DependencyChecker implements DependencyInfo {
         }
         FieldDependency dep = fieldCache.map(fieldRef);
         if (!dep.isMissing()) {
-            tasks.add(() -> linkClass(fieldRef.getClassName(), location).initClass(location));
+            tasks.add(() -> linkClass(fieldRef.className, location).initClass(location));
         }
         if (!dep.isMissing() && added) {
             for (DependencyListener listener : listeners) {
@@ -439,11 +439,11 @@ public class DependencyChecker implements DependencyInfo {
     private FieldDependency createFieldNode(FieldReference fieldRef, FieldReader field) {
         DependencyNode node = createNode();
         if (shouldLog) {
-            node.setTag(fieldRef.getClassName() + "#" + fieldRef.getFieldName());
+            node.setTag(fieldRef.className + "#" + fieldRef.fieldName);
         }
         FieldDependency dep = new FieldDependency(node, field, fieldRef);
         if (!dep.isMissing()) {
-            tasks.add(() -> linkClass(fieldRef.getClassName(), null).initClass(null));
+            tasks.add(() -> linkClass(fieldRef.className, null).initClass(null));
         }
         return dep;
     }

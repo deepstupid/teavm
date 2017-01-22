@@ -157,7 +157,7 @@ public class MissingItemsProcessor {
     }
 
     private boolean checkField(TextLocation location, FieldReference field) {
-        if (!checkClass(location, field.getClassName())) {
+        if (!checkClass(location, field.className)) {
             return false;
         }
         if (!achievableFields.contains(field) || !dependencyInfo.getField(field).isMissing()) {

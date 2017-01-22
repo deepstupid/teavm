@@ -347,6 +347,7 @@ public class Renderer implements RenderingManager {
 
     private void renderMethodBodies(ClassNode cls) throws RenderingException {
         debugEmitter.emitClass(cls.getName());
+        MethodNode currentMethod = null;
         try {
             MethodReader clinit = classSource.get(cls.getName()).getMethod(
                     new MethodDescriptor("<clinit>", ValueType.VOID));
@@ -356,6 +357,7 @@ public class Renderer implements RenderingManager {
             }
             if (!cls.getModifiers().contains(ElementModifier.INTERFACE)) {
                 for (MethodNode method : cls.getMethods()) {
+                    currentMethod = method;
                     if (!method.getModifiers().contains(ElementModifier.STATIC)) {
                         if (method.getReference().getName().equals("<init>")) {
                             renderInitializer(method);
@@ -365,10 +367,12 @@ public class Renderer implements RenderingManager {
             }
 
             for (MethodNode method : cls.getMethods()) {
+                currentMethod = method;
                 renderBody(method, clinit != null);
             }
         } catch (NamingException e) {
-            throw new RenderingException("Error rendering class " + cls.getName() + ". See a cause for details", e);
+            throw new RenderingException("Error rendering class " + cls.getName()
+                    + " at method: " + currentMethod + "\n", e);
         } catch (IOException e) {
             throw new RenderingException("IO error occurred", e);
         }

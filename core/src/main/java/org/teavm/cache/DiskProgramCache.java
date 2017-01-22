@@ -110,10 +110,10 @@ public class DiskProgramCache implements ProgramCache {
     static class ProgramDependencyAnalyzer implements InstructionVisitor {
         Set<String> dependencies = new HashSet<>();
         @Override public void visit(GetFieldInstruction insn) {
-            dependencies.add(insn.getField().getClassName());
+            dependencies.add(insn.getField().className);
         }
         @Override public void visit(PutFieldInstruction insn) {
-            dependencies.add(insn.getField().getClassName());
+            dependencies.add(insn.getField().className);
         }
         @Override public void visit(InvokeInstruction insn) {
             dependencies.add(insn.getMethod().getClassName());

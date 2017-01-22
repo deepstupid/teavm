@@ -68,10 +68,10 @@ public class ScalarReplacement implements MethodOptimization {
                 for (FieldReference field : fields) {
                     Variable var = program.createVariable();
                     if (instanceVar.getDebugName() != null) {
-                        var.setDebugName(instanceVar.getDebugName() + "$" + field.getFieldName());
+                        var.setDebugName(instanceVar.getDebugName() + "$" + field.fieldName);
                     }
                     if (instanceVar.getLabel() != null) {
-                        var.setLabel(instanceVar.getLabel() + "$" + field.getFieldName());
+                        var.setLabel(instanceVar.getLabel() + "$" + field.fieldName);
                     }
                     fieldMapping.put(field, var);
                 }

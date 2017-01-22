@@ -94,8 +94,8 @@ public interface ClassReaderSource {
     }
 
     default FieldReader resolve(FieldReference field) {
-        return getAncestors(field.getClassName())
-                .map(cls -> cls.getField(field.getFieldName()))
+        return getAncestors(field.className)
+                .map(cls -> cls.getField(field.fieldName))
                 .filter(candidate -> candidate != null)
                 .findFirst().orElse(null);
     }

@@ -177,7 +177,7 @@ public class DiskRegularMethodNodeCache implements MethodNodeCache {
         @Override
         public void visit(QualificationExpr expr) {
             super.visit(expr);
-            dependencies.add(expr.getField().getClassName());
+            dependencies.add(expr.getField().className);
         }
     }
 

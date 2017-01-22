@@ -72,9 +72,9 @@ public class ReferenceCache {
         FieldReference result = fieldRefenceCache.get(reference);
         if (result == null) {
             result = reference;
-            String classNameCached = getCached(reference.getClassName());
-            String fieldNameCached = getCached(reference.getFieldName());
-            if (classNameCached != reference.getClassName() || fieldNameCached != reference.getFieldName()) {
+            String classNameCached = getCached(reference.className);
+            String fieldNameCached = getCached(reference.fieldName);
+            if (classNameCached != reference.className || fieldNameCached != reference.fieldName) {
                 result = new FieldReference(classNameCached, fieldNameCached);
             }
             fieldRefenceCache.put(result, result);

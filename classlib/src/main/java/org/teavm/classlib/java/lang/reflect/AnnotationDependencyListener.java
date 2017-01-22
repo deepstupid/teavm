@@ -185,7 +185,7 @@ public class AnnotationDependencyListener extends AbstractDependencyListener {
 
             AnnotationReader retention = annotType.getAnnotations().get(Retention.class.getName());
             if (retention != null) {
-                String retentionPolicy = retention.getValue("value").getEnumValue().getFieldName();
+                String retentionPolicy = retention.getValue("value").getEnumValue().fieldName;
                 if (retentionPolicy.equals("RUNTIME")) {
                     annotations.add(annot);
                 }
@@ -252,7 +252,7 @@ public class AnnotationDependencyListener extends AbstractDependencyListener {
                 return array;
             }
             case AnnotationValue.ENUM:
-                pe.initClass(value.getEnumValue().getClassName());
+                pe.initClass(value.getEnumValue().className);
                 return pe.getField(value.getEnumValue(), type);
             case AnnotationValue.CLASS:
                 return pe.constant(value.getJavaClass());

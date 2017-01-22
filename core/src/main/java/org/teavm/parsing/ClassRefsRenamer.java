@@ -283,14 +283,14 @@ public class ClassRefsRenamer implements InstructionVisitor {
 
     @Override
     public void visit(GetFieldInstruction insn) {
-        String className = classNameMapper.map(insn.getField().getClassName());
-        insn.setField(new FieldReference(className, insn.getField().getFieldName()));
+        String className = classNameMapper.map(insn.getField().className);
+        insn.setField(new FieldReference(className, insn.getField().fieldName));
     }
 
     @Override
     public void visit(PutFieldInstruction insn) {
-        String className = classNameMapper.map(insn.getField().getClassName());
-        insn.setField(new FieldReference(className, insn.getField().getFieldName()));
+        String className = classNameMapper.map(insn.getField().className);
+        insn.setField(new FieldReference(className, insn.getField().fieldName));
     }
 
     @Override

@@ -87,12 +87,12 @@ public class DefaultAliasProvider implements AliasProvider {
 
     @Override
     public String getFieldAlias(FieldReference field) {
-        return makeUnique(knownVirtualAliases, "$" + field.getFieldName());
+        return makeUnique(knownVirtualAliases, "$" + field.fieldName);
     }
 
     @Override
     public String getStaticFieldAlias(FieldReference field) {
-        return makeUnique(knownAliases, getClassAlias(field.getClassName()) + "_" + field.getFieldName());
+        return makeUnique(knownAliases, getClassAlias(field.className) + "_" + field.fieldName);
     }
 
     @Override

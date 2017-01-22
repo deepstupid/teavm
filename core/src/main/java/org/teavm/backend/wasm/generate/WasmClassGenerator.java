@@ -219,14 +219,14 @@ public class WasmClassGenerator {
             header.setAddress(CLASS_LAYOUT, binaryWriter.append(layoutSize));
             for (FieldReference field : fields) {
                 DataValue layoutElement = DataPrimitives.SHORT.createValue();
-                int offset = binaryData.fieldLayout.get(field.getFieldName());
+                int offset = binaryData.fieldLayout.get(field.fieldName);
                 layoutElement.setShort(0, (short) offset);
                 binaryWriter.append(layoutElement);
             }
         }
 
         for (FieldReference field : getStaticReferenceFields(binaryData.cls)) {
-            staticGcRoots.add(binaryData.fieldLayout.get(field.getFieldName()));
+            staticGcRoots.add(binaryData.fieldLayout.get(field.fieldName));
         }
 
         return vtable != null ? wrapper : header;
@@ -305,10 +305,10 @@ public class WasmClassGenerator {
     }
 
     public int getFieldOffset(FieldReference field) {
-        ValueType type = ValueType.object(field.getClassName());
+        ValueType type = ValueType.object(field.className);
         addClass(type);
         ClassBinaryData data = binaryDataMap.get(type);
-        return data.fieldLayout.get(field.getFieldName());
+        return data.fieldLayout.get(field.fieldName);
     }
 
     public int getClassSize(String className) {

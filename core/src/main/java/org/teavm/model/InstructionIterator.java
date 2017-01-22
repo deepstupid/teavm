@@ -15,12 +15,13 @@
  */
 package org.teavm.model;
 
+import java.util.Iterator;
 import org.teavm.model.instructions.InstructionReader;
 
-public interface InstructionIterator {
+public interface InstructionIterator extends Iterator<Instruction> {
     boolean hasNext();
 
-    void next();
+    Instruction next();
 
     boolean hasPrevious();
 

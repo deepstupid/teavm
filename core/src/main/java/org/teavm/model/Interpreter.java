@@ -654,14 +654,14 @@ public class Interpreter {
         private Field getJvmField(FieldReference field) {
             Class<?> cls;
             try {
-                cls = Class.forName(field.getClassName(), false, classLoader);
+                cls = Class.forName(field.className, false, classLoader);
             } catch (ClassNotFoundException e) {
-                throw new RuntimeException("Class not found: " + field.getClassName());
+                throw new RuntimeException("Class not found: " + field.className);
             }
 
             Field jvmField;
             try {
-                jvmField = cls.getDeclaredField(field.getFieldName());
+                jvmField = cls.getDeclaredField(field.fieldName);
             } catch (NoSuchFieldException e) {
                 throw new RuntimeException("Field not found: " + field);
             }

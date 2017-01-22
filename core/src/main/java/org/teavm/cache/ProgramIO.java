@@ -453,8 +453,8 @@ public class ProgramIO {
                 if (insn.getInstance() != null) {
                     output.writeShort(insn.getInstance().getIndex());
                 }
-                output.writeInt(symbolTable.lookup(insn.getField().getClassName()));
-                output.writeInt(symbolTable.lookup(insn.getField().getFieldName()));
+                output.writeInt(symbolTable.lookup(insn.getField().className));
+                output.writeInt(symbolTable.lookup(insn.getField().fieldName));
                 output.writeInt(symbolTable.lookup(insn.getFieldType().toString()));
             } catch (IOException e) {
                 throw new IOExceptionWrapper(e);
@@ -468,8 +468,8 @@ public class ProgramIO {
                 if (insn.getInstance() != null) {
                     output.writeShort(insn.getInstance().getIndex());
                 }
-                output.writeInt(symbolTable.lookup(insn.getField().getClassName()));
-                output.writeInt(symbolTable.lookup(insn.getField().getFieldName()));
+                output.writeInt(symbolTable.lookup(insn.getField().className));
+                output.writeInt(symbolTable.lookup(insn.getField().fieldName));
                 output.writeShort(insn.getValue().getIndex());
             } catch (IOException e) {
                 throw new IOExceptionWrapper(e);

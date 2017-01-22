@@ -104,8 +104,8 @@ class AnnotationProxy implements InvocationHandler {
             return convertClass(value.getJavaClass());
         } else if (classSource.isSuperType(ValueType.parse(Enum.class), type).orElse(false)) {
             FieldReference fieldRef = value.getEnumValue();
-            Class<?> enumClass = Class.forName(fieldRef.getClassName(), true, classLoader);
-            return enumClass.getField(fieldRef.getFieldName()).get(null);
+            Class<?> enumClass = Class.forName(fieldRef.className, true, classLoader);
+            return enumClass.getField(fieldRef.fieldName).get(null);
         } else if (classSource.isSuperType(ValueType.parse(Annotation.class), type).orElse(false)) {
             Class<?> annotType = convertClass(type);
             AnnotationProxy handler = new AnnotationProxy(classLoader, classSource, value.getAnnotation(), annotType);

@@ -41,13 +41,16 @@ public class DefaultNamingStrategy implements NamingStrategy {
 
     @Override
     public String getNameFor(MethodDescriptor method) {
-        String key = method.toString();
-        String alias = aliases.get(key);
-        if (alias == null) {
-            alias = aliasProvider.getMethodAlias(method);
-            aliases.put(key, alias);
-        }
-        return alias;
+        return aliases.computeIfAbsent(method.toString(), k -> {
+            return aliasProvider.getMethodAlias(method);
+        });
+//        String key = method.toString();
+//        String alias = aliases.get(key);
+//        if (alias == null) {
+//            alias =
+//            aliases.put(key, alias);
+//        }
+//        return alias;
     }
 
     @Override
@@ -74,10 +77,10 @@ public class DefaultNamingStrategy implements NamingStrategy {
 
     @Override
     public String getNameFor(FieldReference field) {
-        String realCls = getRealFieldOwner(field.getClassName(), field.getFieldName());
-        if (!realCls.equals(field.getClassName())) {
-            String alias = getNameFor(new FieldReference(realCls, field.getFieldName()));
-            fieldAliases.put(field.getClassName() + "#" + field, alias);
+        String realCls = getRealFieldOwner(field.className, field.fieldName);
+        if (!realCls.equals(field.className)) {
+            String alias = getNameFor(new FieldReference(realCls, field.fieldName));
+            fieldAliases.put(field.className + "#" + field, alias);
             return alias;
         } else {
             return fieldAliases.computeIfAbsent(realCls + "#" + field, key -> aliasProvider.getFieldAlias(field));
@@ -86,10 +89,10 @@ public class DefaultNamingStrategy implements NamingStrategy {
 
     @Override
     public String getFullNameFor(FieldReference field) throws NamingException {
-        String realCls = getRealFieldOwner(field.getClassName(), field.getFieldName());
-        if (!realCls.equals(field.getClassName())) {
-            String alias = getNameFor(new FieldReference(realCls, field.getFieldName()));
-            staticFieldAliases.put(field.getClassName() + "#" + field, alias);
+        String realCls = getRealFieldOwner(field.className, field.fieldName);
+        if (!realCls.equals(field.className)) {
+            String alias = getNameFor(new FieldReference(realCls, field.fieldName));
+            staticFieldAliases.put(field.className + "#" + field, alias);
             return alias;
         } else {
             return staticFieldAliases.computeIfAbsent(realCls + "#" + field,

@@ -22,7 +22,7 @@
     <module name="HideUtilityClassConstructor"/>
     <module name="EmptyStatement"/>
     <module name="EqualsHashCode"/>
-    <module name="InnerAssignment"/>
+    <!--<module name="InnerAssignment"/>-->
     <module name="SimplifyBooleanExpression"/>
     <module name="SimplifyBooleanReturn"/>
     <module name="StringLiteralEquality"/>
@@ -58,9 +58,9 @@
     <module name="ParameterName"/>
     <module name="StaticVariableName"/>
     <module name="TypeName"/>
-    <module name="LineLength">
-      <property name="max" value="120"/>
-    </module>
+    <!--<module name="LineLength">-->
+      <!--<property name="max" value="120"/>-->
+    <!--</module>-->
     <module name="GenericWhitespace"/>
     <module name="EmptyForInitializerPad"/>
     <module name="EmptyForIteratorPad"/>

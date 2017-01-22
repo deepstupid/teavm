@@ -549,8 +549,8 @@ public class AstIO {
                 if (expr.getQualified() != null) {
                     writeExpr(expr.getQualified());
                 }
-                output.writeInt(symbolTable.lookup(expr.getField().getClassName()));
-                output.writeInt(symbolTable.lookup(expr.getField().getFieldName()));
+                output.writeInt(symbolTable.lookup(expr.getField().className));
+                output.writeInt(symbolTable.lookup(expr.getField().fieldName));
             } catch (IOException e) {
                 throw new IOExceptionWrapper(e);
             }

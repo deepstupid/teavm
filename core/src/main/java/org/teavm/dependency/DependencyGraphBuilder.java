@@ -528,7 +528,7 @@ class DependencyGraphBuilder {
                     fieldDep.getValue().connect(receiverNode);
                 }
             }
-            initClass(field.getClassName());
+            initClass(field.className);
         }
 
         @Override
@@ -542,7 +542,7 @@ class DependencyGraphBuilder {
                     valueNode.connect(fieldDep.getValue());
                 }
             }
-            initClass(field.getClassName());
+            initClass(field.className);
         }
 
         @Override

@@ -19,21 +19,13 @@ package org.teavm.model;
  *
  * @author Alexey Andreev
  */
-public class FieldReference {
-    private String className;
-    private String fieldName;
+public final class FieldReference {
+    public final String className;
+    public final String fieldName;
 
     public FieldReference(String className, String fieldName) {
         this.className = className;
         this.fieldName = fieldName;
-    }
-
-    public String getClassName() {
-        return className;
-    }
-
-    public String getFieldName() {
-        return fieldName;
     }
 
     @Override

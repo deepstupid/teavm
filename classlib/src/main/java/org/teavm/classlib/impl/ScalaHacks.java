@@ -72,7 +72,7 @@ public class ScalaHacks implements ClassHolderTransformer {
                                 insn.delete();
                             }
                         } else if (insn instanceof PutFieldInstruction) {
-                            if (((PutFieldInstruction) insn).getField().getFieldName().equals("ScalaCompilerVersion")) {
+                            if (((PutFieldInstruction) insn).getField().fieldName.equals("ScalaCompilerVersion")) {
                                 insn.delete();
                             }
                         } else if (insn instanceof ConstructInstruction) {

@@ -110,8 +110,8 @@ public class WasmGenerationContext {
     }
 
     public ValueType getFieldType(FieldReference fieldReference) {
-        ClassReader cls = classSource.get(fieldReference.getClassName());
-        FieldReader field = cls.getField(fieldReference.getFieldName());
+        ClassReader cls = classSource.get(fieldReference.className);
+        FieldReader field = cls.getField(fieldReference.fieldName);
         return field.getType();
     }
 

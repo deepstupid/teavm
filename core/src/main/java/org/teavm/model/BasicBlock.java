@@ -239,9 +239,9 @@ public class BasicBlock implements BasicBlockReader, Iterable<Instruction> {
             }
 
             @Override
-            public void next() {
+            public Instruction next() {
                 readInstruction = instruction;
-                instruction = instruction.next;
+                return instruction = instruction.next;
             }
 
             @Override
