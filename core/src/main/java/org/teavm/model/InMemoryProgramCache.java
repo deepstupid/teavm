@@ -24,7 +24,7 @@ import org.teavm.model.util.ProgramUtils;
  * @author Alexey Andreev
  */
 public class InMemoryProgramCache implements ProgramCache {
-    private Map<MethodReference, Program> cache = new HashMap<>();
+    private final Map<MethodReference, Program> cache = new HashMap<>();
 
     @Override
     public Program get(MethodReference method) {

@@ -15,12 +15,13 @@
  */
 package org.teavm.model;
 
+import java.io.Serializable;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Phi implements PhiReader {
+public class Phi implements PhiReader, Serializable {
     private BasicBlock basicBlock;
     private Variable receiver;
     private List<Incoming> incomings = new ArrayList<>();

@@ -15,7 +15,12 @@
  */
 package org.teavm.model;
 
-import java.util.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -23,8 +28,9 @@ import java.util.stream.Collectors;
  *
  * @author Alexey Andreev
  */
-public abstract class ValueType {
-    volatile String reprCache;
+public abstract class ValueType implements Serializable {
+
+    transient volatile String reprCache = null;
     private static final Map<Class<?>, ValueType> primitiveMap = new HashMap<>();
 
     private ValueType() {

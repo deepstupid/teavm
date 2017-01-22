@@ -15,12 +15,13 @@
  */
 package org.teavm.model;
 
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class MutableClassHolderSource implements ListableClassHolderSource {
-    private Map<String, ClassHolder> classes = new LinkedHashMap<>();
+public class MutableClassHolderSource implements ListableClassHolderSource, Serializable {
+    private final Map<String, ClassHolder> classes = new LinkedHashMap<>();
 
     @Override
     public Set<String> getClassNames() {

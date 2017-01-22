@@ -28,7 +28,7 @@ import org.teavm.model.Variable;
  */
 public class SwitchInstruction extends Instruction {
     private Variable condition;
-    private List<SwitchTableEntry> entries = new ArrayList<>();
+    private final List<SwitchTableEntry> entries = new ArrayList<>();
     private BasicBlock defaultTarget;
 
     public Variable getCondition() {
@@ -39,7 +39,24 @@ public class SwitchInstruction extends Instruction {
         this.condition = condition;
     }
 
-    private List<SwitchTableEntry> safeEntries = new AbstractList<SwitchTableEntry>() {
+    public List<SwitchTableEntry> getEntries() {
+        return new SafeSwitchTableEntryAbstractList();
+    }
+
+    public BasicBlock getDefaultTarget() {
+        return defaultTarget;
+    }
+
+    public void setDefaultTarget(BasicBlock defaultTarget) {
+        this.defaultTarget = defaultTarget;
+    }
+
+    @Override
+    public void acceptVisitor(InstructionVisitor visitor) {
+        visitor.visit(this);
+    }
+
+    private class SafeSwitchTableEntryAbstractList extends AbstractList<SwitchTableEntry> {
         @Override
         public SwitchTableEntry set(int index, SwitchTableEntry element) {
             SwitchTableEntry oldElement = entries.get(index);
@@ -79,22 +96,5 @@ public class SwitchInstruction extends Instruction {
         public int size() {
             return entries.size();
         }
-    };
-
-    public List<SwitchTableEntry> getEntries() {
-        return safeEntries;
-    }
-
-    public BasicBlock getDefaultTarget() {
-        return defaultTarget;
-    }
-
-    public void setDefaultTarget(BasicBlock defaultTarget) {
-        this.defaultTarget = defaultTarget;
-    }
-
-    @Override
-    public void acceptVisitor(InstructionVisitor visitor) {
-        visitor.visit(this);
     }
 }

@@ -15,14 +15,15 @@
  */
 package org.teavm.model;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class MethodHandle {
-    private MethodHandleType kind;
-    private String className;
-    private String name;
-    private ValueType valueType;
-    private ValueType[] argumentTypes;
+public class MethodHandle implements Serializable {
+    private final MethodHandleType kind;
+    private final String className;
+    private final String name;
+    private final ValueType valueType;
+    private final ValueType[] argumentTypes;
 
     MethodHandle(MethodHandleType kind, String className, String name, ValueType valueType,
             ValueType[] argumentTypes) {

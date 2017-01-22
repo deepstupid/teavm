@@ -15,14 +15,27 @@
  */
 package org.teavm.model;
 
-import java.util.*;
+import java.io.Serializable;
+import java.util.AbstractList;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 import org.teavm.model.instructions.InstructionReader;
 
-public class BasicBlock implements BasicBlockReader, Iterable<Instruction> {
+public class BasicBlock implements BasicBlockReader, Iterable<Instruction>, Serializable {
+
     private Program program;
+
     private int index;
-    private List<Phi> phis = new ArrayList<>();
-    private List<TryCatchBlock> tryCatchBlocks = new ArrayList<>();
+
+    private final List<Phi> phis = new ArrayList<>();
+
+
+    private final List<TryCatchBlock> tryCatchBlocks = new ArrayList<>();
+
     private Variable exceptionVariable;
     private String label;
     Instruction firstInstruction;
@@ -162,62 +175,15 @@ public class BasicBlock implements BasicBlockReader, Iterable<Instruction> {
         cachedSize = 0;
     }
 
-    private List<Phi> safePhis = new AbstractList<Phi>() {
-        @Override
-        public Phi get(int index) {
-            return phis.get(index);
-        }
-
-        @Override
-        public int size() {
-            return phis.size();
-        }
-
-        @Override
-        public void add(int index, Phi e) {
-            if (e.getBasicBlock() != null) {
-                throw new IllegalArgumentException("This phi is already in some basic block");
-            }
-            e.setBasicBlock(BasicBlock.this);
-            phis.add(index, e);
-        }
-
-        @Override
-        public Phi set(int index, Phi element) {
-            if (element.getBasicBlock() != null) {
-                throw new IllegalArgumentException("This phi is already in some basic block");
-            }
-            Phi oldPhi = phis.get(index);
-            oldPhi.setBasicBlock(null);
-            element.setBasicBlock(BasicBlock.this);
-            return phis.set(index, element);
-        }
-
-        @Override
-        public Phi remove(int index) {
-            Phi phi = phis.remove(index);
-            phi.setBasicBlock(null);
-            return phi;
-        }
-
-        @Override
-        public void clear() {
-            for (Phi phi : phis) {
-                phi.setBasicBlock(null);
-            }
-            phis.clear();
-        }
-    };
 
     public List<Phi> getPhis() {
-        return safePhis;
+        return new SafePhis(this, phis);
     }
 
-    private List<Phi> immutablePhis = Collections.unmodifiableList(phis);
 
     @Override
     public List<? extends PhiReader> readPhis() {
-        return immutablePhis;
+        return Collections.unmodifiableList(phis);
     }
 
     @Override
@@ -292,55 +258,14 @@ public class BasicBlock implements BasicBlockReader, Iterable<Instruction> {
         }
     }
 
-    private List<TryCatchBlock> immutableTryCatchBlocks = Collections.unmodifiableList(tryCatchBlocks);
-
     @Override
     public List<TryCatchBlock> readTryCatchBlocks() {
-        return immutableTryCatchBlocks;
+        return Collections.unmodifiableList(tryCatchBlocks);
     }
 
-    private List<TryCatchBlock> safeTryCatchBlocks = new AbstractList<TryCatchBlock>() {
-        @Override public TryCatchBlock get(int index) {
-            return tryCatchBlocks.get(index);
-        }
-        @Override public int size() {
-            return tryCatchBlocks.size();
-        }
-        @Override public void add(int index, TryCatchBlock element) {
-            if (element.protectedBlock == BasicBlock.this) {
-                throw new IllegalStateException("This try/catch block is already added to basic block");
-            }
-            element.protectedBlock = BasicBlock.this;
-            tryCatchBlocks.add(index, element);
-        }
-        @Override public TryCatchBlock remove(int index) {
-            TryCatchBlock tryCatch = tryCatchBlocks.remove(index);
-            tryCatch.protectedBlock = null;
-            return tryCatch;
-        }
-        @Override public TryCatchBlock set(int index, TryCatchBlock element) {
-            TryCatchBlock oldTryCatch = tryCatchBlocks.get(index);
-            if (oldTryCatch == element) {
-                return oldTryCatch;
-            }
-            if (element.protectedBlock == BasicBlock.this) {
-                throw new IllegalStateException("This try/catch block is already added to basic block");
-            }
-            oldTryCatch.protectedBlock = null;
-            element.protectedBlock = BasicBlock.this;
-            tryCatchBlocks.set(index, element);
-            return oldTryCatch;
-        }
-        @Override public void clear() {
-            for (TryCatchBlock tryCatch : tryCatchBlocks) {
-                tryCatch.protectedBlock = null;
-            }
-            tryCatchBlocks.clear();
-        }
-    };
 
     public List<TryCatchBlock> getTryCatchBlocks() {
-        return safeTryCatchBlocks;
+        return new SafeTryCatchBlockAbstractList();
     }
 
     @Override
@@ -358,5 +283,106 @@ public class BasicBlock implements BasicBlockReader, Iterable<Instruction> {
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    private static class SafePhis extends AbstractList<Phi> {
+
+        final List<Phi> phis;
+        final BasicBlock block;
+
+        private SafePhis(BasicBlock block, List<Phi> phis) {
+            this.block = block;
+            this.phis = phis;
+        }
+
+        @Override
+        public Phi get(int index) {
+            return phis.get(index);
+        }
+
+        @Override
+        public int size() {
+            return phis.size();
+        }
+
+        @Override
+        public void add(int index, Phi e) {
+            if (e.getBasicBlock() != null) {
+                throw new IllegalArgumentException("This phi is already in some basic block");
+            }
+            e.setBasicBlock(block);
+            phis.add(index, e);
+        }
+
+        @Override
+        public Phi set(int index, Phi element) {
+            if (element.getBasicBlock() != null) {
+                throw new IllegalArgumentException("This phi is already in some basic block");
+            }
+            Phi oldPhi = phis.get(index);
+            oldPhi.setBasicBlock(null);
+            element.setBasicBlock(block);
+            return phis.set(index, element);
+        }
+
+        @Override
+        public Phi remove(int index) {
+            Phi phi = phis.remove(index);
+            phi.setBasicBlock(null);
+            return phi;
+        }
+
+        @Override
+        public void clear() {
+            for (Phi phi : phis) {
+                phi.setBasicBlock(null);
+            }
+            phis.clear();
+        }
+    }
+
+    private class SafeTryCatchBlockAbstractList extends AbstractList<TryCatchBlock> {
+        @Override public TryCatchBlock get(int index) {
+            return tryCatchBlocks.get(index);
+        }
+
+        @Override public int size() {
+            return tryCatchBlocks.size();
+        }
+
+        @Override public void add(int index, TryCatchBlock element) {
+            if (element.protectedBlock == BasicBlock.this) {
+                throw new IllegalStateException("This try/catch block is already added to basic block");
+            }
+            element.protectedBlock = BasicBlock.this;
+            tryCatchBlocks.add(index, element);
+        }
+
+        @Override public TryCatchBlock remove(int index) {
+            TryCatchBlock tryCatch = tryCatchBlocks.remove(index);
+            tryCatch.protectedBlock = null;
+            return tryCatch;
+        }
+
+        @Override public TryCatchBlock set(int index, TryCatchBlock element) {
+            TryCatchBlock oldTryCatch = tryCatchBlocks.get(index);
+            if (oldTryCatch == element) {
+                return oldTryCatch;
+            }
+            if (element.protectedBlock == BasicBlock.this) {
+                throw new IllegalStateException("This try/catch block is already added to basic block");
+            }
+            oldTryCatch.protectedBlock = null;
+            element.protectedBlock = BasicBlock.this;
+            tryCatchBlocks.set(index, element);
+            return oldTryCatch;
+        }
+
+        @Override public void clear() {
+            for (TryCatchBlock tryCatch : tryCatchBlocks) {
+                tryCatch.protectedBlock = null;
+            }
+            tryCatchBlocks.clear();
+        }
     }
 }

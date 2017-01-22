@@ -15,10 +15,11 @@
  */
 package org.teavm.model;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import org.teavm.model.instructions.InstructionVisitor;
 
-public abstract class Instruction {
+public abstract class Instruction implements Serializable {
     BasicBlock basicBlock;
     private TextLocation location;
     Instruction next;

@@ -22,11 +22,11 @@ import org.teavm.model.instructions.*;
 import org.teavm.parsing.ClassDateProvider;
 
 public class DiskProgramCache implements ProgramCache {
-    private File directory;
-    private ProgramIO programIO;
-    private Map<MethodReference, Item> cache = new HashMap<>();
-    private Set<MethodReference> newMethods = new HashSet<>();
-    private ClassDateProvider classDateProvider;
+    private final File directory;
+    private final ProgramIO programIO;
+    private final Map<MethodReference, Item> cache = new HashMap<>();
+    private final Set<MethodReference> newMethods = new HashSet<>();
+    private final ClassDateProvider classDateProvider;
 
     public DiskProgramCache(File directory, SymbolTable symbolTable, SymbolTable fileTable,
             ClassDateProvider classDateProvider) {

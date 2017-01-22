@@ -15,11 +15,12 @@
  */
 package org.teavm.model;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AnnotationContainer implements AnnotationContainerReader {
-    private Map<String, AnnotationHolder> annotations = new HashMap<>();
+public class AnnotationContainer implements Serializable, AnnotationContainerReader {
+    private final Map<String, AnnotationHolder> annotations = new HashMap<>();
 
     public void add(AnnotationHolder annotation) {
         if (annotations.containsKey(annotation.getType())) {

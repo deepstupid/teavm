@@ -15,13 +15,14 @@
  */
 package org.teavm.model.instructions;
 
+import java.io.Serializable;
 import org.teavm.model.BasicBlock;
 
 /**
  *
  * @author Alexey Andreev
  */
-public class SwitchTableEntry implements SwitchTableEntryReader {
+public class SwitchTableEntry implements SwitchTableEntryReader, Serializable {
     private int condition;
     private BasicBlock target;
     private SwitchInstruction instruction;

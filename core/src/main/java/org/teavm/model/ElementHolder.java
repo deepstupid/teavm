@@ -15,15 +15,16 @@
  */
 package org.teavm.model;
 
+import java.io.Serializable;
 import java.util.EnumSet;
 
 /**
  *
  * @author Alexey Andreev
  */
-public abstract class ElementHolder implements ElementReader {
-    private EnumSet<ElementModifier> modifiers = EnumSet.noneOf(ElementModifier.class);
-    private AnnotationContainer annotations = new AnnotationContainer();
+public abstract class ElementHolder implements ElementReader, Serializable {
+    private final EnumSet<ElementModifier> modifiers = EnumSet.noneOf(ElementModifier.class);
+    private final AnnotationContainer annotations = new AnnotationContainer();
     private AccessLevel level = AccessLevel.PACKAGE_PRIVATE;
     private String name;
 

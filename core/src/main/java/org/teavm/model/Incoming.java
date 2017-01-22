@@ -15,11 +15,13 @@
  */
 package org.teavm.model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Alexey Andreev
  */
-public class Incoming implements IncomingReader {
+public class Incoming implements Serializable, IncomingReader {
     private Phi phi;
     private Variable value;
     private BasicBlock source;

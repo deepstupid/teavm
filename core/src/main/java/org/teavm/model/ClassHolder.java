@@ -19,9 +19,9 @@ import java.util.*;
 
 public class ClassHolder extends ElementHolder implements ClassReader {
     private String parent = Object.class.getName();
-    private Set<String> interfaces = new LinkedHashSet<>();
-    private Map<MethodDescriptor, MethodHolder> methods = new LinkedHashMap<>();
-    private Map<String, FieldHolder> fields = new LinkedHashMap<>();
+    private final Set<String> interfaces = new LinkedHashSet<>();
+    private final Map<MethodDescriptor, MethodHolder> methods = new LinkedHashMap<>();
+    private final Map<String, FieldHolder> fields = new LinkedHashMap<>();
     private String ownerName;
 
     public ClassHolder(String name) {

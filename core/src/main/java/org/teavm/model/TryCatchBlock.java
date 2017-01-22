@@ -15,7 +15,9 @@
  */
 package org.teavm.model;
 
-public class TryCatchBlock implements TryCatchBlockReader {
+import java.io.Serializable;
+
+public class TryCatchBlock implements TryCatchBlockReader, Serializable {
     BasicBlock protectedBlock;
     private BasicBlock handler;
     private String exceptionType;

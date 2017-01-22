@@ -15,10 +15,12 @@
  */
 package org.teavm.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Program implements ProgramReader {
+public class Program implements ProgramReader, Serializable {
+
     private List<BasicBlock> basicBlocks = new ArrayList<>();
     private List<Variable> variables = new ArrayList<>();
     private MethodHolder method;

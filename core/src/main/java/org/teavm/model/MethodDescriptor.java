@@ -15,12 +15,13 @@
  */
 package org.teavm.model;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class MethodDescriptor {
-    private String name;
-    private ValueType[] signature;
-    private volatile String reprCache;
+public class MethodDescriptor implements Serializable {
+    public final String name;
+    public final ValueType[] signature;
+    private transient volatile String reprCache = null;
 
     public MethodDescriptor(String name, ValueType... signature) {
         if (signature.length < 1) {
@@ -46,7 +47,8 @@ public class MethodDescriptor {
     }
 
     public ValueType[] getSignature() {
-        return Arrays.copyOf(signature, signature.length);
+        return signature;
+        //return Arrays.copyOf(signature, signature.length);
     }
 
     public ValueType[] getParameterTypes() {

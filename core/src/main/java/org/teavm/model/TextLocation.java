@@ -15,11 +15,12 @@
  */
 package org.teavm.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class TextLocation {
-    private String fileName;
-    private int line = -1;
+public class TextLocation implements Serializable {
+    private final String fileName;
+    private final int line;
 
     public TextLocation(String fileName, int line) {
         this.fileName = fileName;
@@ -52,7 +53,7 @@ public class TextLocation {
             return false;
         }
         TextLocation other = (TextLocation) obj;
-        return Objects.equals(fileName, other.fileName) && line == other.line;
+        return line == other.line && Objects.equals(fileName, other.fileName);
     }
 
     @Override

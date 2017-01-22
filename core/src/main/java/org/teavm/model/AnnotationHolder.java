@@ -15,6 +15,7 @@
  */
 package org.teavm.model;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,9 +23,9 @@ import java.util.Map;
  * Represents an annotation of Java element.
  * @author Alexey Andreev
  */
-public class AnnotationHolder implements AnnotationReader {
-    private String type;
-    private Map<String, AnnotationValue> values = new HashMap<>();
+public class AnnotationHolder implements Serializable, AnnotationReader {
+    private final String type;
+    private final Map<String, AnnotationValue> values = new HashMap<>();
 
     public AnnotationHolder(String type) {
         this.type = type;

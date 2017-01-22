@@ -15,18 +15,19 @@
  */
 package org.teavm.model;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ReferenceCache {
-    private Map<MethodReference, MethodReference> referenceCache = new HashMap<>();
-    private Map<FieldReference, FieldReference> fieldRefenceCache = new HashMap<>();
-    private Map<MethodDescriptor, MethodDescriptor> descriptorCache = new HashMap<>();
-    private Map<ValueType, ValueType> valueTypeCache = new HashMap<>();
-    private Map<String, String> classCache = new HashMap<>();
-    private Map<String, MethodReference> referenceParseCache = new HashMap<>();
-    private Map<String, MethodDescriptor> descriptorParseCache = new HashMap<>();
-    private Map<String, ValueType> valueTypeParseCache = new HashMap<>();
+public class ReferenceCache implements Serializable {
+    private final Map<MethodReference, MethodReference> referenceCache = new HashMap<>();
+    private final Map<FieldReference, FieldReference> fieldRefenceCache = new HashMap<>();
+    private final Map<MethodDescriptor, MethodDescriptor> descriptorCache = new HashMap<>();
+    private final Map<ValueType, ValueType> valueTypeCache = new HashMap<>();
+    private final Map<String, String> classCache = new HashMap<>();
+    private final Map<String, MethodReference> referenceParseCache = new HashMap<>();
+    private final Map<String, MethodDescriptor> descriptorParseCache = new HashMap<>();
+    private final Map<String, ValueType> valueTypeParseCache = new HashMap<>();
 
     public MethodReference getCached(MethodReference reference) {
         MethodReference result = referenceCache.get(reference);

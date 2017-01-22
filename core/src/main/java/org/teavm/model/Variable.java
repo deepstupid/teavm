@@ -15,7 +15,9 @@
  */
 package org.teavm.model;
 
-public class Variable implements VariableReader {
+import java.io.Serializable;
+
+public class Variable implements VariableReader, Serializable {
     private Program program;
     private int index;
     private int register;

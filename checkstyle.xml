@@ -29,7 +29,7 @@
     <module name="IllegalThrows">
       <property name="illegalClassNames" value="java.lang.Error, java.lang.RuntimeException"/>
     </module>
-    <module name="ExplicitInitialization"/>
+    <!--<module name="ExplicitInitialization"/>-->
     <module name="DefaultComesLast"/>
     <module name="FallThrough"/>
     <module name="MultipleVariableDeclarations"/>

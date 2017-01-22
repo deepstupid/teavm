@@ -15,10 +15,11 @@
  */
 package org.teavm.model;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
-public class AnnotationValue {
+public class AnnotationValue implements Serializable {
     public static final byte BOOLEAN = 0;
     public static final byte BYTE = 1;
     public static final byte SHORT = 2;
@@ -31,8 +32,8 @@ public class AnnotationValue {
     public static final byte LIST = 9;
     public static final byte ENUM = 10;
     public static final byte ANNOTATION = 11;
-    private byte type;
-    private Object value;
+    private final byte type;
+    private final Object value;
 
     public AnnotationValue(boolean value) {
         this.type = BOOLEAN;
