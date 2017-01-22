@@ -15,9 +15,9 @@
  */
 package org.teavm.model.analysis;
 
+import com.carrotsearch.hppc.IntHashSet;
+import com.carrotsearch.hppc.IntObjectHashMap;
 import com.carrotsearch.hppc.IntObjectMap;
-import com.carrotsearch.hppc.IntObjectOpenHashMap;
-import com.carrotsearch.hppc.IntOpenHashSet;
 import com.carrotsearch.hppc.IntSet;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -280,7 +280,7 @@ public class ClassInference {
         GraphBuilder arrayGraphBuilder;
         GraphBuilder itemGraphBuilder;
         List<IntObjectMap<ValueType>> casts = new ArrayList<>();
-        IntObjectMap<IntSet> exceptionMap = new IntObjectOpenHashMap<>();
+        IntObjectMap<IntSet> exceptionMap = new IntObjectHashMap<>();
         List<Task> tasks = new ArrayList<>();
         List<List<VirtualCallSite>> virtualCallSites = new ArrayList<>();
         BasicBlock currentBlock;
@@ -293,7 +293,7 @@ public class ClassInference {
             itemGraphBuilder = new GraphBuilder(variableCount);
             casts = new ArrayList<>(variableCount);
             for (int i = 0; i < variableCount; ++i) {
-                casts.add(new IntObjectOpenHashMap<>());
+                casts.add(new IntObjectHashMap<>());
             }
 
             virtualCallSites = new ArrayList<>(Collections.nCopies(variableCount, null));
@@ -329,7 +329,7 @@ public class ClassInference {
         public void visit(RaiseInstruction insn) {
             IntSet blockIndexes = exceptionMap.get(insn.getException().getIndex());
             if (blockIndexes == null) {
-                blockIndexes = new IntOpenHashSet();
+                blockIndexes = new IntHashSet();
                 exceptionMap.put(insn.getException().getIndex(), blockIndexes);
             }
             blockIndexes.add(currentBlock.getIndex());
@@ -452,9 +452,9 @@ public class ClassInference {
     }
 
     static class Task {
-        int variable;
-        int degree;
-        String className;
+        final int variable;
+        final int degree;
+        final String className;
 
         Task(int variable, int degree, String className) {
             this.variable = variable;
@@ -464,7 +464,7 @@ public class ClassInference {
     }
 
     static class VirtualCallSite {
-        Set<MethodReference> resolvedMethods = new HashSet<>();
+        final Set<MethodReference> resolvedMethods = new HashSet<>();
         MethodReference method;
         int[] arguments;
         int receiver;

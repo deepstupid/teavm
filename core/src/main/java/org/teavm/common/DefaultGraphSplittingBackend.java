@@ -15,8 +15,8 @@
  */
 package org.teavm.common;
 
+import com.carrotsearch.hppc.IntIntHashMap;
 import com.carrotsearch.hppc.IntIntMap;
-import com.carrotsearch.hppc.IntIntOpenHashMap;
 
 public class DefaultGraphSplittingBackend implements GraphSplittingBackend {
     private MutableDirectedGraph graph;
@@ -47,9 +47,11 @@ public class DefaultGraphSplittingBackend implements GraphSplittingBackend {
 
     @Override
     public int[] split(int[] domain, int[] nodes) {
-        int[] copies = new int[nodes.length];
-        IntIntMap map = new IntIntOpenHashMap();
-        for (int i = 0; i < nodes.length; ++i) {
+        int numNodes = nodes.length;
+
+        int[] copies = new int[numNodes];
+        IntIntMap map = new IntIntHashMap(numNodes);
+        for (int i = 0; i < numNodes; ++i) {
             copies[i] = index++;
             map.put(nodes[i], copies[i] + 1);
             int proto = prototypeNodes.get(nodes[i]);
@@ -70,16 +72,12 @@ public class DefaultGraphSplittingBackend implements GraphSplittingBackend {
             }
         }
 
-        for (int i = 0; i < nodes.length; ++i) {
+        for (int i = 0; i < numNodes; ++i) {
             int node = nodes[i];
             int nodeCopy = copies[i];
             for (int succ : graph.outgoingEdges(node)) {
                 int succCopy = map.get(succ);
-                if (succCopy != 0) {
-                    graph.addEdge(nodeCopy, succCopy - 1);
-                } else {
-                    graph.addEdge(nodeCopy, succ);
-                }
+                graph.addEdge(nodeCopy, (succCopy != 0) ? succCopy - 1 : succ);
             }
         }
 

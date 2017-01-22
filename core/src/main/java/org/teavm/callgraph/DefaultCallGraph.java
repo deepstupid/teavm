@@ -42,7 +42,7 @@ public class DefaultCallGraph implements CallGraph {
     public Collection<DefaultFieldAccessSite> getFieldAccess(FieldReference reference) {
         Set<DefaultFieldAccessSite> resultSet = fieldAccessSites.get(reference);
         return resultSet != null ? Collections.unmodifiableSet(resultSet)
-                : Collections.<DefaultFieldAccessSite>emptySet();
+                : Collections.emptySet();
     }
 
     void addFieldAccess(DefaultFieldAccessSite accessSite) {
@@ -58,7 +58,7 @@ public class DefaultCallGraph implements CallGraph {
     public Collection<DefaultClassAccessSite> getClassAccess(String className) {
         Set<DefaultClassAccessSite> resultSet = classAccessSites.get(className);
         return resultSet != null ? Collections.unmodifiableSet(resultSet)
-                : Collections.<DefaultClassAccessSite>emptySet();
+                : Collections.emptySet();
     }
 
     void addClassAccess(DefaultClassAccessSite accessSite) {

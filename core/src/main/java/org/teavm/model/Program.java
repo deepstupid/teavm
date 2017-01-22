@@ -21,8 +21,8 @@ import java.util.List;
 
 public class Program implements ProgramReader, Serializable {
 
-    private List<BasicBlock> basicBlocks = new ArrayList<>();
-    private List<Variable> variables = new ArrayList<>();
+    private final List<BasicBlock> basicBlocks = new ArrayList<>();
+    private final List<Variable> variables = new ArrayList<>();
     private MethodHolder method;
     private boolean packed;
     private int lastUsedRegister;

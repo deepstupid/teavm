@@ -189,7 +189,7 @@ public class Debugger {
 
     private List<DebugInformation> debugInformationBySource(String sourceFile) {
         Map<DebugInformation, Object> list = debugInformationFileMap.get(sourceFile);
-        return list != null ? new ArrayList<>(list.keySet()) : Collections.<DebugInformation>emptyList();
+        return list != null ? new ArrayList<>(list.keySet()) : Collections.emptyList();
     }
 
     public void continueToLocation(SourceLocation location) {

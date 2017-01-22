@@ -20,9 +20,9 @@ package org.teavm.common;
  * @author Alexey Andreev
  */
 class DefaultDominatorTree implements DominatorTree {
-    private LCATree lcaTree;
-    private int[] indexes;
-    private int[] nodes;
+    private final LCATree lcaTree;
+    private final int[] indexes;
+    private final int[] nodes;
 
     public DefaultDominatorTree(int[] dominators, int[] vertices) {
         lcaTree = new LCATree(dominators.length + 1);

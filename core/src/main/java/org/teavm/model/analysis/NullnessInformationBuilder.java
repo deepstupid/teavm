@@ -17,9 +17,9 @@ package org.teavm.model.analysis;
 
 import com.carrotsearch.hppc.IntArrayDeque;
 import com.carrotsearch.hppc.IntDeque;
+import com.carrotsearch.hppc.IntHashSet;
+import com.carrotsearch.hppc.IntIntHashMap;
 import com.carrotsearch.hppc.IntIntMap;
-import com.carrotsearch.hppc.IntIntOpenHashMap;
-import com.carrotsearch.hppc.IntOpenHashSet;
 import com.carrotsearch.hppc.IntSet;
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -59,14 +59,14 @@ import org.teavm.model.util.DominatorWalkerCallback;
 import org.teavm.model.util.PhiUpdater;
 
 class NullnessInformationBuilder {
-    private Program program;
-    private MethodDescriptor methodDescriptor;
+    private final Program program;
+    private final MethodDescriptor methodDescriptor;
     BitSet notNullVariables = new BitSet();
     BitSet nullVariables = new BitSet();
     BitSet synthesizedVariables = new BitSet();
     PhiUpdater phiUpdater;
-    private List<NullConstantInstruction> nullInstructions = new ArrayList<>();
-    private List<NullCheckInstruction> notNullInstructions = new ArrayList<>();
+    private final List<NullConstantInstruction> nullInstructions = new ArrayList<>();
+    private final List<NullCheckInstruction> notNullInstructions = new ArrayList<>();
     private Graph assignmentGraph;
     private int[] notNullPredecessorsLeft;
     private int[] sccIndexes;
@@ -189,8 +189,8 @@ class NullnessInformationBuilder {
     class NullExtensionVisitor extends AbstractInstructionVisitor implements DominatorWalkerCallback<State> {
         State currentState;
         BasicBlock currentBlock;
-        IntIntMap nullSuccessors = new IntIntOpenHashMap();
-        IntIntMap notNullSuccessors = new IntIntOpenHashMap();
+        final IntIntMap nullSuccessors = new IntIntHashMap();
+        final IntIntMap notNullSuccessors = new IntIntHashMap();
         private DominatorTree dom;
 
         @Override
@@ -426,7 +426,7 @@ class NullnessInformationBuilder {
     }
 
     static class State {
-        IntSet newlyNonNull = new IntOpenHashSet();
-        IntSet newlyNull = new IntOpenHashSet();
+        final IntSet newlyNonNull = new IntHashSet();
+        final IntSet newlyNull = new IntHashSet();
     }
 }

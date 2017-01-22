@@ -19,8 +19,10 @@ import java.util.Iterator;
 import org.teavm.model.instructions.InstructionReader;
 
 public interface InstructionIterator extends Iterator<Instruction> {
+    @Override
     boolean hasNext();
 
+    @Override
     Instruction next();
 
     boolean hasPrevious();

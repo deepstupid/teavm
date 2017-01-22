@@ -22,15 +22,15 @@ import java.util.Arrays;
  * @author Alexey Andreev
  */
 class DominatorTreeBuilder {
-    private Graph graph;
-    private int[] semidominators;
-    int[] vertices;
-    private int[] parents;
-    private int[] ancestors;
-    private int[] labels;
-    int[] dominators;
-    private IntegerArray[] bucket;
-    private int[] path;
+    private final Graph graph;
+    private final int[] semidominators;
+    final int[] vertices;
+    final private int[] parents;
+    final private int[] ancestors;
+    final private int[] labels;
+    final int[] dominators;
+    final private IntegerArray[] bucket;
+    final private int[] path;
     private int effectiveSize;
 
     public DominatorTreeBuilder(Graph graph) {

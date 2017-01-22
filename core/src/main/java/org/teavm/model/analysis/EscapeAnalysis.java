@@ -17,7 +17,7 @@ package org.teavm.model.analysis;
 
 import com.carrotsearch.hppc.IntArrayDeque;
 import com.carrotsearch.hppc.IntDeque;
-import com.carrotsearch.hppc.IntOpenHashSet;
+import com.carrotsearch.hppc.IntHashSet;
 import com.carrotsearch.hppc.IntSet;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -122,7 +122,7 @@ public class EscapeAnalysis {
         GraphBuilder graphBuilder = new GraphBuilder(program.variableCount());
         IntDeque queue = new IntArrayDeque();
         for (BasicBlock block : program.getBasicBlocks()) {
-            IntSet sharedIncomingVars = new IntOpenHashSet();
+            IntSet sharedIncomingVars = new IntHashSet();
             BitSet usedVars = getUsedVarsInBlock(livenessAnalyzer, block);
             for (Phi phi : block.getPhis()) {
                 if (escapes(phi.getReceiver().getIndex())) {
@@ -139,7 +139,7 @@ public class EscapeAnalysis {
         }
         Graph graph = graphBuilder.build();
 
-        IntSet visited = new IntOpenHashSet();
+        IntSet visited = new IntHashSet();
         while (!queue.isEmpty()) {
             int var = queue.removeFirst();
             if (visited.add(var)) {
